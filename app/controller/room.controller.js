@@ -21,11 +21,14 @@ const store = async (req, res) => {
   try {
     const room = await Room.query().insert({
       name: req.body.name,
+      description: req.body.description,
+      capacity: parseInt(req.body.capacity),
+      picture: req.file.filename,
     });
 
     res.status(200).json({
       status: 200,
-      message: "Success create!",
+      message: "Ruangan telah berhasil ditambah!",
       data: room,
     });
   } catch (error) {
@@ -59,11 +62,21 @@ const update = async (req, res) => {
       .findById(req.params.id)
       .patch({
         name: req.body.name,
+        description: req.body.description,
+        capacity: parseInt(req.body.capacity),
       });
+
+      if(req.file.filename){
+        await Room.query()
+          .findById(req.params.id)
+          .patch({
+            picture: req.file.filename,
+          });
+      }
 
     res.status(200).json({
       status: 200,
-      message: "Success update!",
+      message: "Ruangan telah berhasil diedit!",
       data: room,
     });
   } catch (error) {
@@ -80,7 +93,7 @@ const destroy = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: "Success delete!",
+      message: "Ruangan telah berhasil dihapus!",
       data: room,
     });
   } catch (error) {

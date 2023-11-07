@@ -99,6 +99,14 @@ const update = async (req, res) => {
           });
       }
 
+      if(req.file.filename){
+        await User.query()
+          .findById(req.params.id)
+          .patch({
+            picture: req.file.filename,
+          });
+      }
+
     res.status(200).json({
       status: 200,
       message: "Success update!",

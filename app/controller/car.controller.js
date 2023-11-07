@@ -70,8 +70,15 @@ const update = async (req, res) => {
       .patch({
         name: req.body.name,
         license: req.body.license,
-        picture: req.file.filename,
       });
+
+      if(req.file.filename){
+        await Car.query()
+          .findById(req.params.id)
+          .patch({
+            picture: req.file.filename,
+          });
+      }
 
     res.status(200).json({
       status: 200,

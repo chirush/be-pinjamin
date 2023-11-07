@@ -10,7 +10,7 @@ const AuthValidator = require("../app/validator/auth.validator");
  * /login:
  *  post:
  *     tags:
- *     - Admin Auth
+ *     - Authentication
  *     summary: Login
  *     requestBody:
  *      required: true
@@ -47,7 +47,7 @@ router.post("/login", AuthValidator.login, AuthController.login);
  * /register:
  *  post:
  *     tags:
- *     - Admin Auth
+ *     - Authentication
  *     summary: Register
  *     requestBody:
  *      required: true

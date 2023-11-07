@@ -4,6 +4,7 @@ const router = express.Router();
 
 const RoomController = require("../app/controller/room.controller");
 const RoomValidator = require("../app/validator/room.validator");
+const upload = require('../middleware/upload.middleware');
 const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
@@ -12,6 +13,8 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *  get:
  *     tags:
  *     - Room
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all room
  *     responses:
  *      200:
@@ -21,7 +24,7 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/room", RoomController.index);
+router.get("/room", AuthMiddleware, RoomController.index);
 
 /**
  * @openapi
@@ -35,15 +38,26 @@ router.get("/room", RoomController.index);
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
  *              - name
+ *              - description
+ *              - capacity
+ *              - picture
  *            properties:
  *              name:
  *               type: string
  *               example: Meeting Room 1
+ *              description:
+ *               type: string
+ *               example: Lorem Ipsum
+ *              capacity:
+ *               type: integer
+ *               example: 15
+ *              picture:
+ *               type: file
  *     responses:
  *      200:
  *        description: Success
@@ -54,7 +68,7 @@ router.get("/room", RoomController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/room", RoomValidator.store, AuthMiddleware, RoomController.store);
+router.post("/room", upload.roomUpload.single('picture'), RoomValidator.store, AuthMiddleware, RoomController.store);
 
 /**
  * @openapi
@@ -62,6 +76,8 @@ router.post("/room", RoomValidator.store, AuthMiddleware, RoomController.store);
  *  get:
  *     tags:
  *     - Room
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get room
  *     parameters:
  *     - name: id
@@ -76,7 +92,7 @@ router.post("/room", RoomValidator.store, AuthMiddleware, RoomController.store);
  *      500:
  *        description: Server Error
  */
-router.get("/room/:id", RoomController.show);
+router.get("/room/:id", AuthMiddleware, RoomController.show);
 
 /**
  * @openapi
@@ -95,15 +111,26 @@ router.get("/room/:id", RoomController.show);
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
  *              - name
+ *              - description
+ *              - capacity
+ *              - picture
  *            properties:
  *              name:
  *               type: string
- *               example: Meeting Room 2
+ *               example: Meeting Room 1
+ *              description:
+ *               type: string
+ *               example: Lorem Ipsum
+ *              capacity:
+ *               type: integer
+ *               example: 15
+ *              picture:
+ *               type: file
  *     responses:
  *      200:
  *        description: Success
@@ -114,7 +141,7 @@ router.get("/room/:id", RoomController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/room/:id", RoomValidator.update, AuthMiddleware, RoomController.update);
+router.put("/room/:id", upload.roomUpload.single('picture'), RoomValidator.update, AuthMiddleware, RoomController.update);
 
 /**
  * @openapi
