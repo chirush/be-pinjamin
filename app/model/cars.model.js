@@ -13,16 +13,16 @@ class Cars extends Model {
     return {
       type: "object",
 
-      required: ["brand", "type", "license"],
+      required: ["name", "license", "picture"],
 
       properties: {
         name: {
           type: "string",
         },
-        type: {
+        license: {
           type: "string",
         },
-        license: {
+        picture: {
           type: "string",
         },
       },

@@ -4,6 +4,7 @@ const router = express.Router();
 
 const CarController = require("../app/controller/car.controller");
 const CarValidator = require("../app/validator/car.validator");
+const upload = require('../middleware/upload.middleware');
 const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
@@ -12,6 +13,8 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *  get:
  *     tags:
  *     - Car
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all car
  *     responses:
  *      200:
@@ -21,7 +24,7 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/car", CarController.index);
+router.get("/car", AuthMiddleware, CarController.index);
 
 /**
  * @openapi
@@ -35,23 +38,22 @@ router.get("/car", CarController.index);
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
- *              - brand
- *              - type
+ *              - name
  *              - license
+ *              - picture
  *            properties:
- *              brand:
+ *              name:
  *               type: string
  *               example: Volkswagen
- *              type:
- *               type: string
- *               example: Type 1
  *              license:
  *               type: string
  *               example: AB12345
+ *              picture:
+ *               type: file
  *     responses:
  *      200:
  *        description: Success
@@ -62,7 +64,7 @@ router.get("/car", CarController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/car", CarValidator.store, AuthMiddleware, CarController.store);
+router.post("/car", upload.carUpload.single('picture'), CarValidator.store, AuthMiddleware, CarController.store);
 
 /**
  * @openapi
@@ -71,6 +73,8 @@ router.post("/car", CarValidator.store, AuthMiddleware, CarController.store);
  *     tags:
  *     - Car
  *     summary: Get car
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
@@ -84,7 +88,7 @@ router.post("/car", CarValidator.store, AuthMiddleware, CarController.store);
  *      500:
  *        description: Server Error
  */
-router.get("/car/:id", CarController.show);
+router.get("/car/:id", AuthMiddleware, CarController.show);
 
 /**
  * @openapi
@@ -103,23 +107,22 @@ router.get("/car/:id", CarController.show);
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
- *              - brand
- *              - type
+ *              - name
  *              - license
+ *              - picture
  *            properties:
- *              brand:
+ *              name:
  *               type: string
  *               example: Volkswagen
- *              type:
- *               type: string
- *               example: Type 2
  *              license:
  *               type: string
  *               example: AB12345
+ *              picture:
+ *               type: file
  *     responses:
  *      200:
  *        description: Success
@@ -130,7 +133,7 @@ router.get("/car/:id", CarController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/car/:id", CarValidator.update, AuthMiddleware, CarController.update);
+router.put("/car/:id", upload.carUpload.single('picture'), CarValidator.update, AuthMiddleware, CarController.update);
 
 /**
  * @openapi

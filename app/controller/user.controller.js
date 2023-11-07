@@ -21,14 +21,6 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-    let userCheck = await User.query().where("username", req.body.username).first();
-    if (userCheck) {
-      return res.status(400).json({
-        status: 400,
-        message: "Username not available!",
-      });
-    }
-
     let emailCheck = await User.query().where("email", req.body.email).first();
     if (emailCheck) {
       return res.status(400).json({
@@ -52,6 +44,8 @@ const store = async (req, res) => {
       password: await bcrypt.hash(req.body.password, 10),
       phone: req.body.phone,
       role: req.body.role,
+      division: req.body.division,
+      picture: req.file.filename,
     });
 
     res.status(200).json({
@@ -93,6 +87,8 @@ const update = async (req, res) => {
         email: req.body.email,
         phone: req.body.phone,
         role: req.body.role,
+        division: req.body.division,
+        picture: req.file.filename,
       });
 
       if(req.body.password){

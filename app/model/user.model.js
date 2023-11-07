@@ -13,7 +13,7 @@ class User extends Model {
     return {
       type: "object",
 
-      required: ["name", "email", "password", "phone", "role"],
+      required: ["name", "email", "password", "phone", "role", "division", "picture"],
 
       properties: {
         name: {
@@ -29,6 +29,12 @@ class User extends Model {
           type: "string",
         },
         role: {
+          type: "string",
+        },
+        division: {
+          type: "string",
+        },
+        picture: {
           type: "string",
         },
       },

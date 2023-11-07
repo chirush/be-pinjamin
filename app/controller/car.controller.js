@@ -23,19 +23,19 @@ const store = async (req, res) => {
     if (licenseCheck) {
       return res.status(400).json({
         status: 400,
-        message: "License has already registered!",
+        message: "Nomor polisi sudah teregistrasi sebelumnya!",
       });
     }
 
     const car = await Car.query().insert({
-      brand: req.body.brand,
-      type: req.body.type,
+      name: req.body.name,
       license: req.body.license,
+      picture: req.file.filename,
     });
 
     res.status(200).json({
       status: 200,
-      message: "Success create!",
+      message: "Mobil telah berhasil ditambah!",
       data: car,
     });
   } catch (error) {
@@ -68,14 +68,14 @@ const update = async (req, res) => {
     const car = await Car.query()
       .findById(req.params.id)
       .patch({
-        brand: req.body.brand,
-        type: req.body.type,
+        name: req.body.name,
         license: req.body.license,
+        picture: req.file.filename,
       });
 
     res.status(200).json({
       status: 200,
-      message: "Success update!",
+      message: "Mobil telah berhasil diedit!",
       data: car,
     });
   } catch (error) {
@@ -92,7 +92,7 @@ const destroy = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: "Success delete!",
+      message: "Mobil telah berhasil dihapus!",
       data: car,
     });
   } catch (error) {

@@ -1,9 +1,8 @@
 const { check, validationResult } = require("express-validator");
 
 const store = [
-  check("brand").not().isEmpty().withMessage("brand can not be empty!"),
-  check("type").not().isEmpty().withMessage("type can not be empty!"),
-  check("license").not().isEmpty().withMessage("license can not be empty!"),
+  check("name").not().isEmpty().withMessage("Nama tidak boleh kosong!"),
+  check("license").not().isEmpty().withMessage("Nomor polisi tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -25,9 +24,8 @@ const store = [
 ];
 
 const update = [
-  check("brand").not().isEmpty().withMessage("brand can not be empty!"),
-  check("type").not().isEmpty().withMessage("type can not be empty!"),
-  check("license").not().isEmpty().withMessage("license can not be empty!"),
+  check("name").not().isEmpty().withMessage("Nama tidak boleh kosong!"),
+  check("license").not().isEmpty().withMessage("Nomor polisi tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);

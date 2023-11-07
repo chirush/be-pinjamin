@@ -1,14 +1,42 @@
 const multer = require('multer');
 
-const storage = multer.diskStorage({
+const carStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'uploads/cars/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
   },
 });
 
-const upload = multer({ storage: storage });
+const carUpload = multer({ storage: carStorage });
 
-module.exports = upload;
+
+const roomStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/rooms/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const roomUpload = multer({ storage: roomStorage });
+
+
+const userStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/users/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const userUpload = multer({ storage: userStorage });
+
+module.exports = {
+  carUpload,
+  roomUpload,
+  userUpload,
+};

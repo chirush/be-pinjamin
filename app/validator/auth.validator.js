@@ -1,8 +1,8 @@
 const { check, validationResult } = require("express-validator");
 
 const login = [
-  check("email").not().isEmpty().withMessage("email can not be empty!"),
-  check("password").not().isEmpty().withMessage("password can not be empty!"),
+  check("email").not().isEmpty().withMessage("Email tidak boleh kosong!"),
+  check("password").not().isEmpty().withMessage("Password tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -24,10 +24,10 @@ const login = [
 ];
 
 const register = [
-  check("name").not().isEmpty().withMessage("name can not be empty!"),
-  check("email").not().isEmpty().withMessage("email can not be empty!"),
-  check("password").not().isEmpty().withMessage("password can not be empty!"),
-  check("phone").not().isEmpty().withMessage("phone can not be empty!"),
+  check("name").not().isEmpty().withMessage("Nama tidak boleh kosong!"),
+  check("email").not().isEmpty().withMessage("Email tidak boleh kosong!"),
+  check("password").not().isEmpty().withMessage("Password tidak boleh kosong!"),
+  check("phone").not().isEmpty().withMessage("Telepon tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);

@@ -99,7 +99,7 @@ router.get("/user", AuthMiddleware, UserController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/user", upload.single('picture'), UserValidator.store, AuthMiddleware, UserController.store);
+router.post("/user", upload.userUpload.single('picture'), UserValidator.store, AuthMiddleware, UserController.store);
 
 /**
  * @openapi
@@ -184,7 +184,7 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/user/:id", upload.single('picture'), AuthMiddleware, UserValidator.update, UserController.update);
+router.put("/user/:id", upload.userUpload.single('picture'), AuthMiddleware, UserValidator.update, UserController.update);
 
 /**
  * @openapi
