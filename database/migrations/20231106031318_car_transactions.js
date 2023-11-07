@@ -6,7 +6,8 @@ exports.up = function (knex) {
     table.text("description");
     table.integer("passanger");
     table.text("passanger_description");
-    table.enu("driver", ["Ya", "Tidak"]);
+    table.enu("driver", ["0", "1"]);
+    table.integer("driver_id").nullable();
     table.datetime("datetime_start");
     table.datetime("datetime_taken").nullable();
     table.datetime("datetime_return").nullable();

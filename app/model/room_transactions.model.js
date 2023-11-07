@@ -13,25 +13,37 @@ class RoomTransactions extends Model {
     return {
       type: "object",
 
-      required: ["name", "room_id", "datetime_start", "description", "status"],
+      required: ["user_id", "room_id", "date", "time_start", "time_end", "event", "description", "participant", "consumption", "note", "status"],
 
       properties: {
-        name: {
-          type: "string",
-        },
-        phone: {
-          type: "string",
+        user_id: {
+          type: "integer",
         },
         room_id: {
           type: "integer",
         },
-        datetime_start: {
+        date: {
           type: "string",
         },
-        datetime_end: {
+        time_start: {
+          type: "string",
+        },
+        time_end: {
+          type: "string",
+        },
+        event: {
           type: "string",
         },
         description: {
+          type: "string",
+        },
+        participant: {
+          type: "integer",
+        },
+        consumption: {
+          type: "string",
+        },
+        note: {
           type: "string",
         },
         status: {

@@ -19,15 +19,18 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-  	const duration = req.body.duration;
-
     const room_transaction = await RoomTransaction.query().insert({
-      name: req.body.name,
-      phone: req.body.phone,
+      user_id: req.user.id,
       room_id: req.body.room_id,
-      datetime_start: req.body.datetime_start,
+      date: req.body.date,
+      time_start: req.body.time_start,
+      time_end: req.body.time_end,
+      event: req.body.event,
       description: req.body.description,
-      status: "Pending",
+      participant: req.body.participant,
+      consumption: req.body.consumption,
+      note: req.body.note,
+      status: "Dicek",
     });
 
     res.status(200).json({
@@ -60,19 +63,31 @@ const show = async (req, res) => {
   }
 };
 
-const update = async (req, res) => {
+const confirmation = async (req, res) => {
   try {
-    const room_transaction = await RoomTransaction.query()
+    const room_confirmation = await RoomTransaction.query()
       .findById(req.params.id)
       .patch({
-        name: req.body.name,
+        room_id: req.body.room_id,
+        date: req.body.date,
+        time_start: req.body.time_start,
+        time_end: req.body.time_end,
+        status: req.body.status,
       });
 
-    res.status(200).json({
-      status: 200,
-      message: "Success update!",
-      data: room_transaction,
-    });
+    if(req.body.status == "Ditolak"){
+      res.status(200).json({
+        status: 200,
+        message: "Peminjaman ruangan telah ditolak!",
+        data: room_confirmation,
+      });
+    }else{
+      res.status(200).json({
+        status: 200,
+        message: "Peminjaman ruangan telah diterima!",
+        data: room_confirmation,
+      });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -120,7 +135,7 @@ module.exports = {
   index,
   store,
   show,
-  update,
+  confirmation,
   destroy,
   detail,
 };

@@ -1,11 +1,14 @@
 const { check, validationResult } = require("express-validator");
 
 const store = [
-  check("name").not().isEmpty().withMessage("name can not be empty!"),
-  check("phone").not().isEmpty().withMessage("phone can not be empty!"),
-  check("room_id").not().isEmpty().withMessage("room can not be empty!"),
-  check("datetime_start").not().isEmpty().withMessage("booking date can not be empty!"),
-  check("room_id").not().isEmpty().withMessage("room can not be empty!"),
+  check("room_id").not().isEmpty().withMessage("Ruangan tidak boleh kosong!"),
+  check("date").not().isEmpty().withMessage("Tanggal tidak boleh kosong!"),
+  check("time_start").not().isEmpty().withMessage("Waktu mulai tidak boleh kosong!"),
+  check("time_end").not().isEmpty().withMessage("Waktu selesai tidak boleh kosong!"),
+  check("event").not().isEmpty().withMessage("Acara tidak boleh kosong!"),
+  check("description").not().isEmpty().withMessage("Deskripsi tidak boleh kosong!"),
+  check("participant").not().isEmpty().withMessage("Jumlah peserta tidak boleh kosong!"),
+  check("consumption").not().isEmpty().withMessage("room tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -26,8 +29,12 @@ const store = [
   },
 ];
 
-const update = [
-  check("name").not().isEmpty().withMessage("name can not be empty!"),
+const confirmation = [
+  check("room_id").not().isEmpty().withMessage("Ruangan tidak boleh kosong!"),
+  check("date").not().isEmpty().withMessage("Tanggal tidak boleh kosong!"),
+  check("time_start").not().isEmpty().withMessage("Waktu mulai tidak boleh kosong!"),
+  check("time_end").not().isEmpty().withMessage("Waktu selesai tidak boleh kosong!"),
+  check("status").not().isEmpty().withMessage("Status tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -50,5 +57,5 @@ const update = [
 
 module.exports = {
   store,
-  update,
+  confirmation,
 };

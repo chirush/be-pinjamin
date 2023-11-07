@@ -30,6 +30,8 @@ router.get("/room/transaction", RoomController.index);
  *  post:
  *     tags:
  *     - Room Transaction
+ *     security:
+ *       - bearerAuth: []
  *     summary: Book a room
  *     requestBody:
  *      required: true
@@ -38,31 +40,46 @@ router.get("/room/transaction", RoomController.index);
  *           schema:
  *            type: object
  *            required:
- *              - name
- *              - phone
  *              - room_id
- *              - datetime_start
- *              - duration
+ *              - date
+ *              - time_start
+ *              - time_end
+ *              - event
  *              - description
+ *              - participant
+ *              - participant_description
+ *              - consumption
+ *              - consumption_description
  *            properties:
- *              name:
- *               type: string
- *               example: Fitrah Firdaus
- *              phone:
- *               type: string
- *               example: 089501027942
  *              room_id:
  *               type: integer
  *               example: 1
- *              datetime_start:
+ *              date:
  *               type: string
- *               format: date-time
- *              duration:
+ *               format: date
+ *              time_start:
  *               type: string
- *               format: duration
+ *               format: time
+ *               example: 07:00:00
+ *              time_end:
+ *               type: string
+ *               format: time
+ *               example: 09:00:00
+ *              event:
+ *               type: string
+ *               example: IT Forum
  *              description:
  *               type: string
  *               example: For meeting purposes
+ *              participant:
+ *               type: integer
+ *               example: 14
+ *              consumption:
+ *               type: string
+ *               example: 1
+ *              note:
+ *               type: string
+ *               example: Lorem Ipsum
  *     responses:
  *      200:
  *        description: Success
@@ -73,7 +90,7 @@ router.get("/room/transaction", RoomController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/room/transaction", RoomValidator.store, RoomController.store);
+router.post("/room/transaction", AuthMiddleware, RoomValidator.store, RoomController.store);
 
 /**
  * @openapi
@@ -81,6 +98,8 @@ router.post("/room/transaction", RoomValidator.store, RoomController.store);
  *  get:
  *     tags:
  *     - Room Transaction
+ *     security:
+ *       - bearerAuth: []
  *     summary: Detail room transaction
  *     parameters:
  *     - name: id
@@ -95,7 +114,7 @@ router.post("/room/transaction", RoomValidator.store, RoomController.store);
  *      500:
  *        description: Server Error
  */
-router.get("/room/transaction/:id", RoomController.show);
+router.get("/room/transaction/:id", AuthMiddleware, RoomController.show);
 
 /**
  * @openapi
@@ -103,13 +122,13 @@ router.get("/room/transaction/:id", RoomController.show);
  *  put:
  *     tags:
  *     - Room Transaction
- *     summary: Update room transaction
+ *     summary: Confirmation the booked room
  *     security:
  *	     - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the room/transaction
+ *       description: The unique id of the room transaction
  *       required: true
  *     requestBody:
  *      required: true
@@ -118,31 +137,29 @@ router.get("/room/transaction/:id", RoomController.show);
  *           schema:
  *            type: object
  *            required:
- *              - name
- *              - phone
  *              - room_id
- *              - datetime_start
- *              - duration
- *              - description
+ *              - date
+ *              - time_start
+ *              - time_end
+ *              - status
  *            properties:
- *              name:
- *               type: string
- *               example: Fitrah Firdaus
- *              phone:
- *               type: string
- *               example: 089501027942
  *              room_id:
  *               type: integer
  *               example: 1
- *              datetime_start:
+ *              date:
  *               type: string
- *               format: date-time
- *              duration:
+ *               format: date
+ *              time_start:
  *               type: string
- *               format: duration
- *              description:
+ *               format: time
+ *               example: 07:00:00
+ *              time_end:
  *               type: string
- *               example: For meeting purposes
+ *               format: time
+ *               example: 09:00:00
+ *              status:
+ *               type: string
+ *               example: Diterima
  *     responses:
  *      200:
  *        description: Success
@@ -153,7 +170,7 @@ router.get("/room/transaction/:id", RoomController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/room/transaction/:id", RoomValidator.update, AuthMiddleware, RoomController.update);
+router.put("/room/transaction/:id", RoomValidator.confirmation, AuthMiddleware, RoomController.confirmation);
 
 /**
  * @openapi
