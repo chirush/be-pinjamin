@@ -2,20 +2,20 @@ const express = require("express");
 
 const router = express.Router();
 
-const RoomTransactionController = require("../app/controller/room_transaction.controller");
-const RoomTransactionValidator = require("../app/validator/room_transaction.validator");
+const CarTransactionController = require("../app/controller/car_transaction.controller");
+const CarTransactionValidator = require("../app/validator/car_transaction.validator");
 const upload = require('../middleware/upload.middleware');
 const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
  * @openapi
- * /room-transaction:
+ * /car-transaction:
  *  get:
  *     tags:
- *     - Room Transaction
+ *     - Car Transaction
  *     security:
  *       - bearerAuth: []
- *     summary: Get all room transaction
+ *     summary: Get all car transaction
  *     responses:
  *      200:
  *        description: Success
@@ -24,17 +24,17 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/room-transaction", AuthMiddleware, RoomTransactionController.index);
+router.get("/car-transaction", AuthMiddleware, CarTransactionController.index);
 
 /**
  * @openapi
- * /room-transaction:
+ * /car-transaction:
  *  post:
  *     tags:
- *     - Room Transaction
+ *     - Car Transaction
  *     security:
  *       - bearerAuth: []
- *     summary: Book a room
+ *     summary: Book a car
  *     requestBody:
  *      required: true
  *      content:
@@ -42,18 +42,17 @@ router.get("/room-transaction", AuthMiddleware, RoomTransactionController.index)
  *           schema:
  *            type: object
  *            required:
- *              - room_id
- *              - date
- *              - time_start
- *              - time_end
- *              - event
+ *              - destination
  *              - description
+ *              - passanger
+ *              - passanger_description
+ *              - driver
  *              - participant
  *              - participant_description
  *              - consumption
  *              - consumption_description
  *            properties:
- *              room_id:
+ *              car_id:
  *               type: integer
  *               example: 1
  *              date:
@@ -82,12 +81,6 @@ router.get("/room-transaction", AuthMiddleware, RoomTransactionController.index)
  *              note:
  *               type: string
  *               example: Lorem Ipsum
- *              status:
- *               type: string
- *               example: Dicek
- *              confirmation_note:
- *               type: string
- *               example: Lorem Ipsum
  *     responses:
  *      200:
  *        description: Success
@@ -98,21 +91,21 @@ router.get("/room-transaction", AuthMiddleware, RoomTransactionController.index)
  *      500:
  *        description: Server Error
  */
-router.post("/room-transaction", AuthMiddleware, RoomTransactionValidator.store, RoomTransactionController.store);
+router.post("/car-transaction", AuthMiddleware, CarTransactionValidator.store, CarTransactionController.store);
 
 /**
  * @openapi
- * /room-transaction/{id}:
+ * /car-transaction/{id}:
  *  get:
  *     tags:
- *     - Room Transaction
+ *     - Car Transaction
  *     security:
  *       - bearerAuth: []
- *     summary: Detail room transaction
+ *     summary: Detail car transaction
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the room/transaction
+ *       description: The unique id of the car/transaction
  *       required: true
  *     responses:
  *      200:
@@ -122,21 +115,21 @@ router.post("/room-transaction", AuthMiddleware, RoomTransactionValidator.store,
  *      500:
  *        description: Server Error
  */
-router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.show);
+router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show);
 
 /**
  * @openapi
- * /room-transaction/{id}:
+ * /car-transaction/{id}:
  *  put:
  *     tags:
- *     - Room Transaction
- *     summary: Update the booked room (include confirmation)
+ *     - Car Transaction
+ *     summary: Update the booked car (include confirmation)
  *     security:
  *	     - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the room transaction
+ *       description: The unique id of the car transaction
  *       required: true
  *     requestBody:
  *      required: true
@@ -145,13 +138,13 @@ router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.sh
  *           schema:
  *            type: object
  *            required:
- *              - room_id
+ *              - car_id
  *              - date
  *              - time_start
  *              - time_end
  *              - status
  *            properties:
- *              room_id:
+ *              car_id:
  *               type: integer
  *               example: 1
  *              date:
@@ -168,9 +161,6 @@ router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.sh
  *              status:
  *               type: string
  *               example: Diterima
- *              confirmation_note:
- *               type: string
- *               example: Lorem Ipsum
  *     responses:
  *      200:
  *        description: Success
@@ -181,21 +171,21 @@ router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.sh
  *      500:
  *        description: Server Error
  */
-router.put("/room-transaction/:id", RoomTransactionValidator.update, AuthMiddleware, RoomTransactionController.update);
+router.put("/car-transaction/:id", CarTransactionValidator.update, AuthMiddleware, CarTransactionController.update);
 
 /**
  * @openapi
- * /room-transaction/{id}:
+ * /car-transaction/{id}:
  *  delete:
  *     tags:
- *     - Room Transaction
- *     summary: Delete room transaction
+ *     - Car Transaction
+ *     summary: Delete car transaction
  *     security:
  *	     - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the room/transaction
+ *       description: The unique id of the car/transaction
  *       required: true
  *     responses:
  *      200:
@@ -205,7 +195,7 @@ router.put("/room-transaction/:id", RoomTransactionValidator.update, AuthMiddlew
  *      500:
  *        description: Server Error
  */
-router.delete("/room-transaction/:id", AuthMiddleware, RoomTransactionController.destroy);
+router.delete("/car-transaction/:id", AuthMiddleware, CarTransactionController.destroy);
 
 
 module.exports = router;

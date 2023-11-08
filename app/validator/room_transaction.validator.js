@@ -9,7 +9,7 @@ const store = [
   check("description").not().isEmpty().withMessage("Deskripsi tidak boleh kosong!"),
   check("participant").not().isEmpty().withMessage("Jumlah peserta tidak boleh kosong!"),
   check("consumption").not().isEmpty().withMessage("room tidak boleh kosong!"),
-  check("note").not().isEmpty().withMessage("room tidak boleh kosong!"),
+  check("note").not().isEmpty().withMessage("Catatan tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -30,7 +30,7 @@ const store = [
   },
 ];
 
-const confirmation = [
+const update = [
   check("room_id").not().isEmpty().withMessage("Ruangan tidak boleh kosong!"),
   check("date").not().isEmpty().withMessage("Tanggal tidak boleh kosong!"),
   check("time_start").not().isEmpty().withMessage("Waktu mulai tidak boleh kosong!"),
@@ -58,5 +58,5 @@ const confirmation = [
 
 module.exports = {
   store,
-  confirmation,
+  update,
 };

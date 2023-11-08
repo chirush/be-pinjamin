@@ -13,7 +13,7 @@ class RoomTransactions extends Model {
     return {
       type: "object",
 
-      required: ["user_id", "room_id", "date", "time_start", "time_end", "event", "description", "participant", "consumption", "note", "status"],
+      required: ["user_id", "room_id", "date", "time_start", "time_end", "event", "description", "participant", "consumption", "note"],
 
       properties: {
         user_id: {
@@ -47,6 +47,9 @@ class RoomTransactions extends Model {
           type: "string",
         },
         status: {
+          type: "string",
+        },
+        confirmation_note: {
           type: "string",
         },
       },

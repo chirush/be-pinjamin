@@ -11,7 +11,8 @@ exports.up = function (knex) {
     table.tinyint("participant");
     table.enu("consumption", ["0", "1"]);
     table.text("note");
-    table.enu("status", ["Dicek", "Ditolak", "Diterima"]);
+    table.enu("status", ["Dicek", "Ditolak", "Diterima"]).defaultTo("Dicek");
+    table.string("confirmation_note").nullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();

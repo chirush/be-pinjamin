@@ -6,7 +6,7 @@ exports.up = function (knex) {
     table.tinyint("capacity");
     table.string("license");
     table.string("picture");
-    table.enu("availability", ["0", "1"]);
+    table.enu("availability", ["0", "1"]).defaultTo("1");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();

@@ -52,7 +52,8 @@ const store = async (req, res) => {
       participant: req.body.participant,
       consumption: req.body.consumption,
       note: req.body.note,
-      status: "Dicek",
+      status: req.body.status,
+      confirmation_note: req.body.confirmation_note,
     });
 
     res.status(200).json({
@@ -85,12 +86,12 @@ const show = async (req, res) => {
   }
 };
 
-const confirmation = async (req, res) => {
+const update = async (req, res) => {
   try {
     //Checking if the room has been booked or not
     if(req.body.status == "Diterima"){
       //Checking if theres any room that has been booked based on the requested date
-      const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').select('time_start', 'time_end');
+      const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').where('room_id', req.body.room_id).select('time_start', 'time_end');
 
       //Declaring the time that has been requested to datetime
       const time_start = new Date(req.body.date+"T"+req.body.time_start);
@@ -120,6 +121,7 @@ const confirmation = async (req, res) => {
         time_start: req.body.time_start,
         time_end: req.body.time_end,
         status: req.body.status,
+        confirmation_note: req.body.confirmation_note,
       });
 
     //2 Different message will show based on the choosen status
@@ -165,6 +167,6 @@ module.exports = {
   index,
   store,
   show,
-  confirmation,
+  update,
   destroy,
 };

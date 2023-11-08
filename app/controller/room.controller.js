@@ -3,10 +3,8 @@ const RoomTransaction = require("../model/room_transactions.model");
 
 const index = async (req, res) => {
   try {
-    const rooms = await Room.query();
-
     //Declaring current datetime
-    const current_datetime = new Date().toISOString()+7;
+    const current_datetime = new Date().toISOString();
 
     //Removing the time from current_datetime
     const current_date = current_datetime.split('T')[0];
@@ -17,8 +15,8 @@ const index = async (req, res) => {
     //Checking room availability
     for (const item of today_transaction){
       //Declaring the time that has been booked to datetime
-      const time_start = new Date(current_date+"T"+item.time_start);
-      const time_end = new Date(current_date+"T"+item.time_end);
+      const time_start = new Date(current_date+"T"+item.time_start).toISOString();
+      const time_end = new Date(current_date+"T"+item.time_end).toISOString();
 
       //Checking the room availability by looking the time conflict
       if (current_datetime > time_start && current_datetime < time_end){
@@ -29,14 +27,16 @@ const index = async (req, res) => {
             availability: "0",
           });
       }else{
-        const room = await Room.query()
         //Updating the availability to 1 (available)
+        const room = await Room.query()
           .where('id', '!=', item.room_id)
           .patch({
             availability: "1",
           });
       }
     }
+
+    const rooms = await Room.query();
 
     res.status(200).json({
       status: 200,

@@ -14,7 +14,8 @@ exports.up = function (knex) {
     table.integer("car_id").nullable();
     table.string("driving_license").nullable();
     table.string("picture").nullable();
-    table.enu("status", ["Dicek", "Ditolak", "Diterima", "Digunakan", "Selesai"]);
+    table.enu("status", ["Dicek", "Ditolak", "Diterima", "Digunakan", "Selesai"]).defaultTo("Dicek");
+    table.string("confirmation_note").nullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();
