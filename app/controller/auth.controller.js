@@ -76,7 +76,7 @@ const register = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
-      phone: req.body.phone,
+      phone: toStr(req.body.phone),
       role: "user",
     });
 

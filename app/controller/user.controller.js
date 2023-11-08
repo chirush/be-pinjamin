@@ -42,7 +42,7 @@ const store = async (req, res) => {
       email: req.body.email,
       username: req.body.username,
       password: await bcrypt.hash(req.body.password, 10),
-      phone: req.body.phone,
+      phone: toStr(req.body.phone),
       role: req.body.role,
       division: req.body.division,
       picture: req.file.filename,
@@ -85,7 +85,7 @@ const update = async (req, res) => {
       .patch({
         name: req.body.name,
         email: req.body.email,
-        phone: req.body.phone,
+        phone: toStr(req.body.phone),
         role: req.body.role,
         division: req.body.division,
         picture: req.file.filename,
