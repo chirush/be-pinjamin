@@ -19,6 +19,23 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
+    const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').select('time_start', 'time_end');
+
+    const time_start = new Date(req.body.date+"T"+req.body.time_start);
+    const time_end = new Date(req.body.date+"T"+req.body.time_end);
+
+    for (const item of existing_transaction) {
+      const existing_time_start = new Date(req.body.date+"T"+item.time_start);
+      const existing_time_end = new Date(req.body.date+"T"+item.time_end);
+
+      if ((time_start >= existing_time_start && time_start < existing_time_end) || (time_end > existing_time_start && time_end <= existing_time_end) || (time_start <= existing_time_start && time_end >= existing_time_end)) {
+        return res.status(400).json({
+          status: 400,
+          message: "Pengajuan peminjaman ruangan gagal. Seseorang telah meminjam ruangan di jam tersebut!",
+        });
+      }
+    }
+
     const room_transaction = await RoomTransaction.query().insert({
       user_id: req.user.id,
       room_id: req.body.room_id,
@@ -35,7 +52,7 @@ const store = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: "Success create!",
+      message: "Pengajuan peminjaman ruangan berhasil!",
       data: room_transaction,
     });
   } catch (error) {
@@ -65,6 +82,25 @@ const show = async (req, res) => {
 
 const confirmation = async (req, res) => {
   try {
+    if(req.body.status == "Diterima"){
+      const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').select('time_start', 'time_end');
+
+      const time_start = new Date(req.body.date+"T"+req.body.time_start);
+      const time_end = new Date(req.body.date+"T"+req.body.time_end);
+
+      for (const item of existing_transaction) {
+        const existing_time_start = new Date(req.body.date+"T"+item.time_start);
+        const existing_time_end = new Date(req.body.date+"T"+item.time_end);
+
+        if ((time_start >= existing_time_start && time_start < existing_time_end) || (time_end > existing_time_start && time_end <= existing_time_end) || (time_start <= existing_time_start && time_end >= existing_time_end)) {
+          return res.status(400).json({
+            status: 400,
+            message: "Penerimaan peminjaman ruangan gagal. Seseorang telah meminjam ruangan di jam tersebut!",
+          });
+        }
+      }
+    }
+
     const room_confirmation = await RoomTransaction.query()
       .findById(req.params.id)
       .patch({
