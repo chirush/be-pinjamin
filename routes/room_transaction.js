@@ -9,7 +9,7 @@ const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
  * @openapi
- * /room/transaction:
+ * /room-transaction:
  *  get:
  *     tags:
  *     - Room Transaction
@@ -24,11 +24,11 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/room/transaction", AuthMiddleware, RoomController.index);
+router.get("/room-transaction", AuthMiddleware, RoomController.index);
 
 /**
  * @openapi
- * /room/transaction:
+ * /room-transaction:
  *  post:
  *     tags:
  *     - Room Transaction
@@ -92,11 +92,11 @@ router.get("/room/transaction", AuthMiddleware, RoomController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/room/transaction", AuthMiddleware, RoomValidator.store, RoomController.store);
+router.post("/room-transaction", AuthMiddleware, RoomValidator.store, RoomController.store);
 
 /**
  * @openapi
- * /room/transaction/{id}:
+ * /room-transaction/{id}:
  *  get:
  *     tags:
  *     - Room Transaction
@@ -116,11 +116,11 @@ router.post("/room/transaction", AuthMiddleware, RoomValidator.store, RoomContro
  *      500:
  *        description: Server Error
  */
-router.get("/room/transaction/:id", AuthMiddleware, RoomController.show);
+router.get("/room-transaction/:id", AuthMiddleware, RoomController.show);
 
 /**
  * @openapi
- * /room/transaction/{id}:
+ * /room-transaction/{id}:
  *  put:
  *     tags:
  *     - Room Transaction
@@ -172,11 +172,11 @@ router.get("/room/transaction/:id", AuthMiddleware, RoomController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/room/transaction/:id", RoomValidator.confirmation, AuthMiddleware, RoomController.confirmation);
+router.put("/room-transaction/:id", RoomValidator.confirmation, AuthMiddleware, RoomController.confirmation);
 
 /**
  * @openapi
- * /room/transaction/{id}:
+ * /room-transaction/{id}:
  *  delete:
  *     tags:
  *     - Room Transaction
@@ -196,7 +196,7 @@ router.put("/room/transaction/:id", RoomValidator.confirmation, AuthMiddleware, 
  *      500:
  *        description: Server Error
  */
-router.delete("/room/transaction/:id", AuthMiddleware, RoomController.destroy);
+router.delete("/room-transaction/:id", AuthMiddleware, RoomController.destroy);
 
 
 module.exports = router;
