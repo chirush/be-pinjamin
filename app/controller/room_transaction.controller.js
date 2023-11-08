@@ -19,12 +19,12 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-    const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').select('time_start', 'time_end');
+    const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').where('room_id', req.body.room_id).select('time_start', 'time_end');
 
     const time_start = new Date(req.body.date+"T"+req.body.time_start);
     const time_end = new Date(req.body.date+"T"+req.body.time_end);
 
-    for (const item of existing_transaction) {
+    for (const item of existing_transaction){
       const existing_time_start = new Date(req.body.date+"T"+item.time_start);
       const existing_time_end = new Date(req.body.date+"T"+item.time_end);
 
@@ -88,7 +88,7 @@ const confirmation = async (req, res) => {
       const time_start = new Date(req.body.date+"T"+req.body.time_start);
       const time_end = new Date(req.body.date+"T"+req.body.time_end);
 
-      for (const item of existing_transaction) {
+      for (const item of existing_transaction){
         const existing_time_start = new Date(req.body.date+"T"+item.time_start);
         const existing_time_end = new Date(req.body.date+"T"+item.time_end);
 
@@ -138,7 +138,7 @@ const destroy = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: "Success delete!",
+      message: "Peminjaman ruangan telah dihapus!",
       data: room_transaction,
     });
   } catch (error) {

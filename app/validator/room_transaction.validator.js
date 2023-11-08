@@ -9,6 +9,7 @@ const store = [
   check("description").not().isEmpty().withMessage("Deskripsi tidak boleh kosong!"),
   check("participant").not().isEmpty().withMessage("Jumlah peserta tidak boleh kosong!"),
   check("consumption").not().isEmpty().withMessage("room tidak boleh kosong!"),
+  check("note").not().isEmpty().withMessage("room tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);

@@ -28,6 +28,9 @@ class Rooms extends Model {
         picture: {
           type: "string",
         },
+        availability: {
+          type: "string",
+        },
       },
     };
   }

@@ -1,8 +1,33 @@
 const Room = require("../model/rooms.model");
+const RoomTransaction = require("../model/room_transactions.model");
 
 const index = async (req, res) => {
   try {
     const rooms = await Room.query();
+
+    const current_datetime = new Date().toISOString()+7;
+    const current_date = current_datetime.split('T')[0];
+
+    const today_transaction = await RoomTransaction.query().where('date', current_date).where('status', 'Diterima').select('room_id', 'time_start', 'time_end');
+
+    for (const item of today_transaction){
+      const time_start = new Date(current_date+"T"+item.time_start);
+      const time_end = new Date(current_date+"T"+item.time_end);
+
+      if (current_datetime > time_start && current_datetime < time_end){
+        const room = await Room.query()
+          .findById(item.room_id)
+          .patch({
+            availability: "0",
+          });
+      }else{
+        const room = await Room.query()
+          .where('id', '!=', item.room_id)
+          .patch({
+            availability: "1",
+          });
+      }
+    }
 
     res.status(200).json({
       status: 200,
