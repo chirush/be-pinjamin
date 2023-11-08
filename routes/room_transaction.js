@@ -13,6 +13,8 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *  get:
  *     tags:
  *     - Room Transaction
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all room transaction
  *     responses:
  *      200:
@@ -22,7 +24,7 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/room/transaction", RoomController.index);
+router.get("/room/transaction", AuthMiddleware, RoomController.index);
 
 /**
  * @openapi
