@@ -110,23 +110,6 @@ const destroy = async (req, res) => {
   }
 };
 
-const detail = async (req, res) => {
-  try {
-    const carid = req.car.id;
-    const cars = await Car.query().where('id', carid);
-
-    res.status(200).json({
-      status: 200,
-      message: "OK!",
-      data: cars,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Internal Server Error!",
-    });
-  }
-};
 
 module.exports = {
   index,
@@ -134,5 +117,4 @@ module.exports = {
   show,
   update,
   destroy,
-  detail,
 };

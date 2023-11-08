@@ -118,7 +118,6 @@ router.get("/room/:id", AuthMiddleware, RoomController.show);
  *              - name
  *              - description
  *              - capacity
- *              - picture
  *            properties:
  *              name:
  *               type: string

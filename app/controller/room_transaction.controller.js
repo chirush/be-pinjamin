@@ -19,15 +19,20 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
+    //Checking if theres any room that has been booked based on the requested date
     const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').where('room_id', req.body.room_id).select('time_start', 'time_end');
 
+    //Declaring the time that has been requested to datetime
     const time_start = new Date(req.body.date+"T"+req.body.time_start);
     const time_end = new Date(req.body.date+"T"+req.body.time_end);
 
+    //Checking if the room has been booked or not
     for (const item of existing_transaction){
+      //Declaring the time that has been booked to datetime
       const existing_time_start = new Date(req.body.date+"T"+item.time_start);
       const existing_time_end = new Date(req.body.date+"T"+item.time_end);
 
+      //Checking if theres any time conflict with the existing transaction
       if ((time_start >= existing_time_start && time_start < existing_time_end) || (time_end > existing_time_start && time_end <= existing_time_end) || (time_start <= existing_time_start && time_end >= existing_time_end)) {
         return res.status(400).json({
           status: 400,
@@ -82,16 +87,21 @@ const show = async (req, res) => {
 
 const confirmation = async (req, res) => {
   try {
+    //Checking if the room has been booked or not
     if(req.body.status == "Diterima"){
+      //Checking if theres any room that has been booked based on the requested date
       const existing_transaction = await RoomTransaction.query().where('date', req.body.date).where('status', 'Diterima').select('time_start', 'time_end');
 
+      //Declaring the time that has been requested to datetime
       const time_start = new Date(req.body.date+"T"+req.body.time_start);
       const time_end = new Date(req.body.date+"T"+req.body.time_end);
 
       for (const item of existing_transaction){
+        //Declaring the time that has been booked to datetime
         const existing_time_start = new Date(req.body.date+"T"+item.time_start);
         const existing_time_end = new Date(req.body.date+"T"+item.time_end);
 
+        //Checking if theres any time conflict with the existing transaction
         if ((time_start >= existing_time_start && time_start < existing_time_end) || (time_end > existing_time_start && time_end <= existing_time_end) || (time_start <= existing_time_start && time_end >= existing_time_end)) {
           return res.status(400).json({
             status: 400,
@@ -101,6 +111,7 @@ const confirmation = async (req, res) => {
       }
     }
 
+    //Updating the room transaction
     const room_confirmation = await RoomTransaction.query()
       .findById(req.params.id)
       .patch({
@@ -111,6 +122,7 @@ const confirmation = async (req, res) => {
         status: req.body.status,
       });
 
+    //2 Different message will show based on the choosen status
     if(req.body.status == "Ditolak"){
       res.status(200).json({
         status: 200,
@@ -149,29 +161,10 @@ const destroy = async (req, res) => {
   }
 };
 
-const detail = async (req, res) => {
-  try {
-    const room_transactionid = req.room_transaction.id;
-    const room_transactions = await RoomTransaction.query().where('id', room_transactionid);
-
-    res.status(200).json({
-      status: 200,
-      message: "OK!",
-      data: room_transactions,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Internal Server Error!",
-    });
-  }
-};
-
 module.exports = {
   index,
   store,
   show,
   confirmation,
   destroy,
-  detail,
 };
