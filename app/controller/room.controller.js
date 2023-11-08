@@ -19,7 +19,7 @@ const index = async (req, res) => {
       const time_end = new Date(current_date+"T"+item.time_end).toISOString();
 
       //Checking the room availability by looking the time conflict
-      if (current_datetime > time_start && current_datetime < time_end){
+      if (current_datetime >= time_start && current_datetime < time_end){
         //Updating the availability to 0 (not available)
         const room = await Room.query()
           .findById(item.room_id)

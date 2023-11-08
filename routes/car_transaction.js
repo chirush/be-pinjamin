@@ -42,43 +42,46 @@ router.get("/car-transaction", AuthMiddleware, CarTransactionController.index);
  *           schema:
  *            type: object
  *            required:
+ *              - date
+ *              - time
  *              - destination
  *              - description
  *              - passanger
  *              - passanger_description
  *              - driver
- *              - participant
- *              - participant_description
- *              - consumption
- *              - consumption_description
  *            properties:
- *              car_id:
- *               type: integer
- *               example: 1
  *              date:
  *               type: string
  *               format: date
- *              time_start:
+ *              time:
  *               type: string
  *               format: time
  *               example: 07:00:00
- *              time_end:
+ *              destination:
  *               type: string
- *               format: time
- *               example: 09:00:00
- *              event:
- *               type: string
- *               example: IT Forum
+ *               example: Lorem Ipsum
  *              description:
  *               type: string
- *               example: For meeting purposes
- *              participant:
+ *               example: Solo
+ *              passanger:
  *               type: integer
- *               example: 14
- *              consumption:
+ *               example: 5
+ *              passanger_description:
+ *               type: string
+ *               example: Lorem Ipsum
+ *              driver:
  *               type: string
  *               example: 1
- *              note:
+ *              driver_id:
+ *               type: string
+ *               example: 1
+ *              car_id:
+ *               type: integer
+ *               example: 1
+ *              status:
+ *               type: string
+ *               example: Dicek
+ *              confirmation_note:
  *               type: string
  *               example: Lorem Ipsum
  *     responses:

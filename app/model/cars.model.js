@@ -13,7 +13,7 @@ class Cars extends Model {
     return {
       type: "object",
 
-      required: ["name", "license", "picture", "availability"],
+      required: ["name", "license", "picture"],
 
       properties: {
         name: {
