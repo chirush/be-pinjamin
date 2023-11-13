@@ -67,7 +67,6 @@ router.get("/user", AuthMiddleware, UserController.index);
  *              - phone
  *              - role
  *              - division
- *              - picture
  *            properties:
  *              name:
  *               type: string

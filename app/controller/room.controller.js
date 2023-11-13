@@ -101,14 +101,13 @@ const update = async (req, res) => {
         capacity: parseInt(req.body.capacity),
       });
 
-      if(req.file){
-        await Room.query()
-          .findById(req.params.id)
-          .patch({
-            picture: req.file.filename,
-          });
-      }
-
+    if(req.file){
+      await Room.query()
+        .findById(req.params.id)
+        .patch({
+          picture: req.file.filename,
+        });
+    }
 
     res.status(200).json({
       status: 200,

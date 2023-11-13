@@ -13,6 +13,7 @@ const login = async (req, res) => {
         "users.password",
         "users.phone",
         "users.division",
+        "users.role",
         "users.created_at",
         "users.updated_at",
       ])
@@ -28,6 +29,7 @@ const login = async (req, res) => {
           "users.password",
           "users.phone",
           "users.division",
+          "users.role",
           "users.created_at",
           "users.updated_at",
         ])
@@ -81,6 +83,7 @@ const register = async (req, res) => {
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
       phone: (req.body.phone).toString(),
+      division: req.body.division,
       role: "user",
     });
 

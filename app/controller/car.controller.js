@@ -19,6 +19,7 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
+    //Checking the car based on license
     let licenseCheck = await Car.query().where("license", req.body.license).first();
     if (licenseCheck) {
       return res.status(400).json({
@@ -27,6 +28,7 @@ const store = async (req, res) => {
       });
     }
 
+    //Storing data to Car
     const car = await Car.query().insert({
       name: req.body.name,
       license: req.body.license,

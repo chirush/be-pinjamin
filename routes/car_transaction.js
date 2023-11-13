@@ -28,6 +28,30 @@ router.get("/car-transaction", AuthMiddleware, CarTransactionController.index);
 
 /**
  * @openapi
+ * /car-transaction/status/{status}:
+ *  get:
+ *     tags:
+ *     - Car Transaction
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Detail car transaction based on status
+ *     parameters:
+ *     - name: status
+ *       in: path
+ *       description: Status of the car transaction
+ *       required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/car-transaction/status/:status", AuthMiddleware, CarTransactionController.showByStatus);
+
+/**
+ * @openapi
  * /car-transaction:
  *  post:
  *     tags:
@@ -108,7 +132,7 @@ router.post("/car-transaction", AuthMiddleware, CarTransactionValidator.store, C
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the car/transaction
+ *       description: The unique id of the car transaction
  *       required: true
  *     responses:
  *      200:
@@ -142,23 +166,34 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *            type: object
  *            required:
  *              - date
+ *              - time
+ *              - destination
+ *              - description
+ *              - passanger
+ *              - passanger_description
+ *              - driver
  *              - status
  *            properties:
  *              date:
  *               type: string
  *               format: date
- *              time_taken:
+ *               example: 2023-11-13
+ *              time:
  *               type: string
  *               format: time
- *               example: 07:00:00
- *              picture:
- *               type: file
- *              driving_license:
- *               type: file
- *              time_return:
+ *               example: 07:30:00
+ *              destination:
  *               type: string
- *               format: time
- *               example: 07:00:00
+ *               example: Lorem Ipsum
+ *              description:
+ *               type: string
+ *               example: Solo
+ *              passanger:
+ *               type: integer
+ *               example: 5
+ *              passanger_description:
+ *               type: string
+ *               example: Lorem Ipsum
  *              driver:
  *               type: string
  *               example: 1
@@ -168,6 +203,18 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *              car_id:
  *               type: integer
  *               example: 1
+ *              time_taken:
+ *               type: string
+ *               format: time
+ *               example: 08:00:00
+ *              picture:
+ *               type: file
+ *              driving_license:
+ *               type: file
+ *              time_return:
+ *               type: string
+ *               format: time
+ *               example: 07:00:00
  *              status:
  *               type: string
  *               example: Diterima
@@ -198,7 +245,7 @@ router.put("/car-transaction/:id", upload.carTransactionUpload.fields([{ name: '
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the car/transaction
+ *       description: The unique id of the car transaction
  *       required: true
  *     responses:
  *      200:

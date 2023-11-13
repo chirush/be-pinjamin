@@ -35,6 +35,11 @@ const update = [
   check("date").not().isEmpty().withMessage("Tanggal tidak boleh kosong!"),
   check("time_start").not().isEmpty().withMessage("Waktu mulai tidak boleh kosong!"),
   check("time_end").not().isEmpty().withMessage("Waktu selesai tidak boleh kosong!"),
+  check("event").not().isEmpty().withMessage("Acara tidak boleh kosong!"),
+  check("description").not().isEmpty().withMessage("Deskripsi tidak boleh kosong!"),
+  check("participant").not().isEmpty().withMessage("Jumlah peserta tidak boleh kosong!"),
+  check("consumption").not().isEmpty().withMessage("room tidak boleh kosong!"),
+  check("note").not().isEmpty().withMessage("Catatan tidak boleh kosong!"),
   check("status").not().isEmpty().withMessage("Status tidak boleh kosong!"),
 
   (req, res, next) => {

@@ -2,7 +2,47 @@ const RoomTransaction = require("../model/room_transactions.model");
 
 const index = async (req, res) => {
   try {
-    const room_transactions = await RoomTransaction.query();
+    //Retreiving user role
+    const user_role = req.user.role;
+    let room_transactions = [];
+
+    //The data will shown based on role
+    if (user_role == "User"){
+      const user_id = req.user.id;
+      room_transactions = await RoomTransaction.query().where('user_id', user_id).orderBy('id', 'desc');
+    }else{
+      room_transactions = await RoomTransaction.query().orderBy('id', 'desc');
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "OK!",
+      data: room_transactions,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+const showByStatus = async (req, res) => {
+  try {
+    //Retreiving user role
+    const user_role = req.user.role;
+    let room_transactions = [];
+
+    //Retreiving status on parameters
+    const status = req.params.status;
+
+    //The data will shown based on role
+    if (user_role == "User"){
+      const user_id = req.user.id;
+      room_transactions = await RoomTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
+    }else{
+      room_transactions = await RoomTransaction.query().where('status', status).orderBy('id', 'desc');
+    }
 
     res.status(200).json({
       status: 200,
@@ -125,18 +165,20 @@ const update = async (req, res) => {
         confirmation_note: req.body.confirmation_note,
       });
 
+    const room_confirmation_data = await RoomTransaction.query().findById(req.params.id);
+
     //2 Different message will show based on the choosen status
     if(req.body.status == "Ditolak"){
       res.status(200).json({
         status: 200,
         message: "Peminjaman ruangan telah ditolak!",
-        data: room_confirmation,
+        data: room_confirmation_data,
       });
     }else{
       res.status(200).json({
         status: 200,
         message: "Peminjaman ruangan telah diterima!",
-        data: room_confirmation,
+        data: room_confirmation_data,
       });
     }
   } catch (error) {
@@ -166,6 +208,7 @@ const destroy = async (req, res) => {
 
 module.exports = {
   index,
+  showByStatus,
   store,
   show,
   update,

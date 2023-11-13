@@ -28,6 +28,30 @@ router.get("/room-transaction", AuthMiddleware, RoomTransactionController.index)
 
 /**
  * @openapi
+ * /room-transaction/status/{status}:
+ *  get:
+ *     tags:
+ *     - Room Transaction
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Detail room transaction based on status
+ *     parameters:
+ *     - name: status
+ *       in: path
+ *       description: Status of the room transaction
+ *       required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/room-transaction/status/:status", AuthMiddleware, RoomTransactionController.showByStatus);
+
+/**
+ * @openapi
  * /room-transaction:
  *  post:
  *     tags:
@@ -149,6 +173,12 @@ router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.sh
  *              - date
  *              - time_start
  *              - time_end
+ *              - event
+ *              - description
+ *              - participant
+ *              - participant_description
+ *              - consumption
+ *              - consumption_description
  *              - status
  *            properties:
  *              room_id:
@@ -165,6 +195,21 @@ router.get("/room-transaction/:id", AuthMiddleware, RoomTransactionController.sh
  *               type: string
  *               format: time
  *               example: 09:00:00
+ *              event:
+ *               type: string
+ *               example: IT Forum
+ *              description:
+ *               type: string
+ *               example: For meeting purposes
+ *              participant:
+ *               type: integer
+ *               example: 14
+ *              consumption:
+ *               type: string
+ *               example: 1
+ *              note:
+ *               type: string
+ *               example: Lorem Ipsum
  *              status:
  *               type: string
  *               example: Diterima
