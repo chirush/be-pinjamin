@@ -151,7 +151,6 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *              - phone
  *              - role
  *              - division
- *              - picture
  *            properties:
  *              name:
  *               type: string

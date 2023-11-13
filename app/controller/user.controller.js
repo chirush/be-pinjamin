@@ -45,8 +45,15 @@ const store = async (req, res) => {
       phone: (req.body.phone).toString(),
       role: req.body.role,
       division: req.body.division,
-      picture: req.file.filename,
     });
+
+    if(req.file){
+      await User.query()
+        .findById(req.params.id)
+        .patch({
+          picture: req.file.filename,
+        });
+    }
 
     res.status(200).json({
       status: 200,
@@ -91,26 +98,28 @@ const update = async (req, res) => {
         picture: req.file.filename,
       });
 
-      if(req.body.password){
-        await User.query()
-          .findById(req.params.id)
-          .patch({
-            password: await bcrypt.hash(req.body.password, 10),
-          });
-      }
+    if(req.body.password){
+      await User.query()
+        .findById(req.params.id)
+        .patch({
+          password: await bcrypt.hash(req.body.password, 10),
+        });
+    }
 
-      if(req.file.filename){
-        await User.query()
-          .findById(req.params.id)
-          .patch({
-            picture: req.file.filename,
-          });
-      }
+    if(req.file.filename){
+      await User.query()
+        .findById(req.params.id)
+        .patch({
+          picture: req.file.filename,
+        });
+    }
+
+    const user_data = await User.query().findById(req.params.id);
 
     res.status(200).json({
       status: 200,
       message: "Success update!",
-      data: user,
+      data: user_data,
     });
   } catch (error) {
     console.error(error);
