@@ -13,7 +13,7 @@ class CarTransactions extends Model {
     return {
       type: "object",
 
-      required: ["user_id", "destination", "description", "passanger", "passanger_description", "driver", "datetime_start", "status"],
+      required: ["user_id", "destination", "description", "passanger", "passanger_description", "driver", "datetime_start"],
 
       properties: {
         user_id: {
@@ -38,6 +38,9 @@ class CarTransactions extends Model {
           type: "string",
         },
         datetime_taken: {
+          type: "string",
+        },
+        datetime_return: {
           type: "string",
         },
         car_id: {

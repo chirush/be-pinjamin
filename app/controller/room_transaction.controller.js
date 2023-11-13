@@ -41,6 +41,7 @@ const store = async (req, res) => {
       }
     }
 
+    //Storing data to Room Transaction
     const room_transaction = await RoomTransaction.query().insert({
       user_id: req.user.id,
       room_id: req.body.room_id,

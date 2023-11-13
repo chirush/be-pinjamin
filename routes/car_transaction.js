@@ -137,33 +137,43 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *     requestBody:
  *      required: true
  *      content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *            type: object
  *            required:
- *              - car_id
  *              - date
- *              - time_start
- *              - time_end
  *              - status
  *            properties:
- *              car_id:
- *               type: integer
- *               example: 1
  *              date:
  *               type: string
  *               format: date
- *              time_start:
+ *              time_taken:
  *               type: string
  *               format: time
  *               example: 07:00:00
- *              time_end:
+ *              picture:
+ *               type: file
+ *              driving_license:
+ *               type: file
+ *              time_return:
  *               type: string
  *               format: time
- *               example: 09:00:00
+ *               example: 07:00:00
+ *              driver:
+ *               type: string
+ *               example: 1
+ *              driver_id:
+ *               type: string
+ *               example: 1
+ *              car_id:
+ *               type: integer
+ *               example: 1
  *              status:
  *               type: string
  *               example: Diterima
+ *              confirmation_note:
+ *               type: string
+ *               example: Lorem Ipsum
  *     responses:
  *      200:
  *        description: Success
@@ -174,7 +184,7 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *      500:
  *        description: Server Error
  */
-router.put("/car-transaction/:id", CarTransactionValidator.update, AuthMiddleware, CarTransactionController.update);
+router.put("/car-transaction/:id", upload.carTransactionUpload.fields([{ name: 'picture', maxCount: 1}, { name: 'driving_license', maxCount: 1}, ]), CarTransactionValidator.update, AuthMiddleware, CarTransactionController.update);
 
 /**
  * @openapi

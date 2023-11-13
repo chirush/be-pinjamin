@@ -28,6 +28,7 @@ const register = [
   check("email").not().isEmpty().withMessage("Email tidak boleh kosong!"),
   check("password").not().isEmpty().withMessage("Password tidak boleh kosong!"),
   check("phone").not().isEmpty().withMessage("Telepon tidak boleh kosong!"),
+  check("division").not().isEmpty().withMessage("Divisi tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);

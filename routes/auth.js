@@ -60,6 +60,7 @@ router.post("/login", AuthValidator.login, AuthController.login);
  *              - email
  *              - password
  *              - phone
+ *              - division
  *            properties:
  *              name:
  *               type: string
@@ -73,6 +74,9 @@ router.post("/login", AuthValidator.login, AuthController.login);
  *              phone:
  *               type: string
  *               example: 089501027942
+ *              division:
+ *               type: string
+ *               example: internship
  *     responses:
  *      200:
  *        description: Success

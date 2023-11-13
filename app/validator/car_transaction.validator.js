@@ -8,7 +8,6 @@ const store = [
   check("passanger").not().isEmpty().withMessage("Jumlah penumpang tidak boleh kosong!"),
   check("passanger_description").not().isEmpty().withMessage("Keterangan penumpang tidak boleh kosong!"),
   check("driver").not().isEmpty().withMessage("Supir tidak boleh kosong!"),
-  check("status").not().isEmpty().withMessage("Status tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -31,8 +30,7 @@ const store = [
 
 const update = [
   check("date").not().isEmpty().withMessage("Tanggal tidak boleh kosong!"),
-  check("time").not().isEmpty().withMessage("Waktu tidak boleh kosong!"),
-  check("driver").not().isEmpty().withMessage("Supir tidak boleh kosong!"),
+  check("status").not().isEmpty().withMessage("Status tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);

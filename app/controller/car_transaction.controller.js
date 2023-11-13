@@ -19,18 +19,20 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-  	const datetime = new Date(req.body.date+" "+req.body.time);
+    //Mergin value of date and time
+  	const datetime = req.body.date+" "+req.body.time;
 
+    //Storing data to Car Transaction
     const car_transaction = await CarTransaction.query().insert({
       user_id: req.user.id,
       datetime_start: datetime,
-      time_start: req.body.time_start,
-      time_end: req.body.time_end,
-      event: req.body.event,
+      destination: req.body.destination,
       description: req.body.description,
-      participant: req.body.participant,
-      consumption: req.body.consumption,
-      note: req.body.note,
+      passanger: req.body.passanger,
+      passanger_description: req.body.passanger_description,
+      driver: req.body.driver,
+      driver_id: req.body.driver_id,
+      car_id: req.body.car_id,
       status: req.body.status,
       confirmation_note: req.body.confirmation_note,
     });
@@ -67,54 +69,77 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    //Checking if the car has been booked or not
-    if(req.body.status == "Diterima"){
-      //Checking if theres any car that has been booked based on the requested date
-      const existing_transaction = await CarTransaction.query().where('date', req.body.date).where('status', 'Diterima').where('car_id', req.body.car_id).select('time_start', 'time_end');
+    //Declaring datetime taken and datetime return
+    let datetime_taken = "";
+    let datetime_return = "";
 
-      //Declaring the time that has been requested to datetime
-      const time_start = new Date(req.body.date+"T"+req.body.time_start);
-      const time_end = new Date(req.body.date+"T"+req.body.time_end);
+    //Checking if theres value on time_taken
+    if(req.body.time_taken){
+      //Merging value of date and time_taken
+      datetime_taken = req.body.date+" "+req.body.time_taken;
+    }
 
-      for (const item of existing_transaction){
-        //Declaring the time that has been booked to datetime
-        const existing_time_start = new Date(req.body.date+"T"+item.time_start);
-        const existing_time_end = new Date(req.body.date+"T"+item.time_end);
-
-        //Checking if theres any time conflict with the existing transaction
-        if ((time_start >= existing_time_start && time_start < existing_time_end) || (time_end > existing_time_start && time_end <= existing_time_end) || (time_start <= existing_time_start && time_end >= existing_time_end)) {
-          return res.status(400).json({
-            status: 400,
-            message: "Penerimaan peminjaman mobil gagal. Seseorang telah meminjam mobil di jam tersebut!",
-          });
-        }
-      }
+    //Checking if theres value on time_return
+    if(req.body.time_return){
+      //Merging value of date and time_return
+      datetime_return = req.body.date+" "+req.body.time_return;
     }
 
     //Updating the car transaction
-    const car_confirmation = await CarTransaction.query()
+    const car_transaction = await CarTransaction.query()
       .findById(req.params.id)
       .patch({
+        datetime_taken: datetime_taken,
+        datetime_return: datetime_return,
+        driver: req.body.driver,
+        driver_id: req.body.driver_id,
         car_id: req.body.car_id,
-        date: req.body.date,
-        time_start: req.body.time_start,
-        time_end: req.body.time_end,
         status: req.body.status,
         confirmation_note: req.body.confirmation_note,
       });
 
-    //2 Different message will show based on the choosen status
+      //Checking if theres picture
+      if(req.files.picture[0].filename){
+        await CarTransaction.query()
+          .findById(req.params.id)
+          .patch({
+            picture: req.files.picture[0].filename,
+          });
+      }
+
+      //Checking if theres driving license picture
+      if(req.files.driving_license[0].filename){
+        await CarTransaction.query()
+          .findById(req.params.id)
+          .patch({
+            driving_license: req.files.driving_license[0].filename,
+          });
+      }
+
+    //4 Different message will show based on the choosen status
     if(req.body.status == "Ditolak"){
       res.status(200).json({
         status: 200,
         message: "Peminjaman mobil telah ditolak!",
-        data: car_confirmation,
+        data: car_transaction,
       });
-    }else{
+    }else if(req.body.status == "Diterima"){
       res.status(200).json({
         status: 200,
         message: "Peminjaman mobil telah diterima!",
-        data: car_confirmation,
+        data: car_transaction,
+      });
+    }else if(req.body.status == "Digunakan"){
+      res.status(200).json({
+        status: 200,
+        message: "Mobil telah diterima!",
+        data: car_transaction,
+      });
+    }else if(req.body.status == "Selesai"){
+      res.status(200).json({
+        status: 200,
+        message: "Peminjaman mobil telah selesai!",
+        data: car_transaction,
       });
     }
   } catch (error) {

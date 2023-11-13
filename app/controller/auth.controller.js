@@ -11,6 +11,8 @@ const login = async (req, res) => {
         "users.name",
         "users.email",
         "users.password",
+        "users.phone",
+        "users.division",
         "users.created_at",
         "users.updated_at",
       ])
@@ -24,6 +26,8 @@ const login = async (req, res) => {
           "users.name",
           "users.email",
           "users.password",
+          "users.phone",
+          "users.division",
           "users.created_at",
           "users.updated_at",
         ])
