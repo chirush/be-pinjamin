@@ -73,7 +73,7 @@ router.get("/user", AuthMiddleware, UserController.index);
  *               example: Fitrah Firdaus
  *              email:
  *               type: string
- *               example: fitrahf87@gmail.com
+ *               example: fitrahf87@gmedia.id
  *              password:
  *               type: string
  *               example: password
@@ -157,7 +157,7 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *               example: Fitrah Firdaus
  *              email:
  *               type: string
- *               example: fitrahf87@gmail.com
+ *               example: fitrahf87@gmedia.id
  *              password:
  *               type: string
  *               example: password

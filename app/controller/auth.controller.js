@@ -78,6 +78,13 @@ const register = async (req, res) => {
       });
     }
 
+    if (!/gmedia\.id$/.test(req.body.email)){
+      return res.status(400).json({
+        status: 400,
+        message: "Email harus memiliki domain @gmedia.id!",
+      });
+    }
+
     const user = await User.query().insert({
       name: req.body.name,
       email: req.body.email,

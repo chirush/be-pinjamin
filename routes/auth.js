@@ -24,7 +24,7 @@ const AuthValidator = require("../app/validator/auth.validator");
  *            properties:
  *              email:
  *               type: string
- *               example: admin@example.com
+ *               example: admin@gmedia.id
  *              password:
  *               type: string
  *               example: password
@@ -67,7 +67,7 @@ router.post("/login", AuthValidator.login, AuthController.login);
  *               example: Fitrah Firdaus
  *              email:
  *               type: string
- *               example: admin@example.com
+ *               example: admin@gmedia.id
  *              password:
  *               type: string
  *               example: password

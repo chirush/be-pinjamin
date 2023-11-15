@@ -37,6 +37,13 @@ const store = async (req, res) => {
       });
     }
 
+    if (!/gmedia\.id$/.test(req.body.email)){
+      return res.status(400).json({
+        status: 400,
+        message: "Email harus memiliki domain @gmedia.id!",
+      });
+    }
+
     const user = await User.query().insert({
       name: req.body.name,
       email: req.body.email,
@@ -87,6 +94,13 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {
   try {
+    if (!/gmedia\.id$/.test(req.body.email)){
+      return res.status(400).json({
+        status: 400,
+        message: "Email harus memiliki domain @gmedia.id!",
+      });
+    }
+    
     const user = await User.query()
       .findById(req.params.id)
       .patch({
