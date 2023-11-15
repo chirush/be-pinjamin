@@ -4,33 +4,33 @@ const { Model } = require("objection");
 
 Model.knex(db);
 
-class Cars extends Model {
+class Notifications extends Model {
   static get tableName() {
-    return "cars";
+    return "notifications";
   }
 
   static get jsonSchema() {
     return {
       type: "object",
 
-      required: ["name", "license", "picture"],
+      required: ["user_id", "notification", "type", "status"],
 
       properties: {
-        name: {
+        user_id: {
           type: "string",
         },
-        license: {
+        notification: {
           type: "string",
         },
-        picture: {
+        type: {
           type: "string",
         },
-        availability: {
-          type: "integer",
+        status: {
+          type: "string",
         },
       },
     };
   }
 }
 
-module.exports = Cars;
+module.exports = Notifications;

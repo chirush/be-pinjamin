@@ -42,7 +42,6 @@ router.get("/division", AuthMiddleware, DivisionController.index);
  *            type: object
  *            required:
  *              - name
- *              - picture
  *            properties:
  *              name:
  *               type: string

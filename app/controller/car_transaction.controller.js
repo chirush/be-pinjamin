@@ -1,5 +1,6 @@
 const CarTransaction = require("../model/car_transactions.model");
 const Driver = require("../model/drivers.model");
+const Notification = require("../model/notifications.model");
 
 const index = async (req, res) => {
   try {
@@ -85,6 +86,19 @@ const store = async (req, res) => {
         .patch({
           availability: "0",
         });
+    }
+
+    //Storing notification
+    if (req.body.status == "Diterima"){
+      const notification = await Notification.query().insert({
+        user_id: req.user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima"
+      })
+    }else{
+      const notification = await Notification.query().insert({
+        user_id: req.user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat"
+      })
     }
 
     res.status(200).json({
