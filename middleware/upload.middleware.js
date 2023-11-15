@@ -24,6 +24,18 @@ const carTransactionStorage = multer.diskStorage({
 const carTransactionUpload = multer({ storage: carTransactionStorage });
 
 
+const driverStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/drivers/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const driverUpload = multer({ storage: driverStorage });
+
+
 const roomStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/rooms/');
@@ -50,6 +62,7 @@ const userUpload = multer({ storage: userStorage });
 module.exports = {
   carUpload,
   carTransactionUpload,
+  driverUpload,
   roomUpload,
   userUpload,
 };

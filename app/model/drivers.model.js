@@ -4,22 +4,19 @@ const { Model } = require("objection");
 
 Model.knex(db);
 
-class Cars extends Model {
+class Drivers extends Model {
   static get tableName() {
-    return "cars";
+    return "drivers";
   }
 
   static get jsonSchema() {
     return {
       type: "object",
 
-      required: ["name", "license"],
+      required: ["name"],
 
       properties: {
         name: {
-          type: "string",
-        },
-        license: {
           type: "string",
         },
         picture: {
@@ -33,4 +30,4 @@ class Cars extends Model {
   }
 }
 
-module.exports = Cars;
+module.exports = Drivers;

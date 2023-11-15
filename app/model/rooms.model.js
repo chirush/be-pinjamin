@@ -13,7 +13,7 @@ class Rooms extends Model {
     return {
       type: "object",
 
-      required: ["name", "description", "capacity", "picture"],
+      required: ["name", "description", "capacity"],
 
       properties: {
         name: {

@@ -2,20 +2,20 @@ const express = require("express");
 
 const router = express.Router();
 
-const CarController = require("../app/controller/car.controller");
-const CarValidator = require("../app/validator/car.validator");
+const DriverController = require("../app/controller/driver.controller");
+const DriverValidator = require("../app/validator/driver.validator");
 const upload = require('../middleware/upload.middleware');
 const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
  * @openapi
- * /car:
+ * /driver:
  *  get:
  *     tags:
- *     - Car
+ *     - Driver
  *     security:
  *       - bearerAuth: []
- *     summary: Get all car
+ *     summary: Get all driver
  *     responses:
  *      200:
  *        description: Success
@@ -24,15 +24,15 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *      500:
  *        description: Server Error
  */
-router.get("/car", AuthMiddleware, CarController.index);
+router.get("/driver", AuthMiddleware, DriverController.index);
 
 /**
  * @openapi
- * /car:
+ * /driver:
  *  post:
  *     tags:
- *     - Car
- *     summary: Add Car
+ *     - Driver
+ *     summary: Add Driver
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -43,15 +43,11 @@ router.get("/car", AuthMiddleware, CarController.index);
  *            type: object
  *            required:
  *              - name
- *              - license
  *              - picture
  *            properties:
  *              name:
  *               type: string
- *               example: Volkswagen
- *              license:
- *               type: string
- *               example: AB12345
+ *               example: Asep
  *              picture:
  *               type: file
  *     responses:
@@ -64,21 +60,21 @@ router.get("/car", AuthMiddleware, CarController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/car", upload.carUpload.single('picture'), CarValidator.store, AuthMiddleware, CarController.store);
+router.post("/driver", upload.driverUpload.single('picture'), DriverValidator.store, AuthMiddleware, DriverController.store);
 
 /**
  * @openapi
- * /car/{id}:
+ * /driver/{id}:
  *  get:
  *     tags:
- *     - Car
- *     summary: Get car
+ *     - Driver
+ *     summary: Get driver
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the car
+ *       description: The unique id of the driver
  *       required: true
  *     responses:
  *      200:
@@ -88,21 +84,21 @@ router.post("/car", upload.carUpload.single('picture'), CarValidator.store, Auth
  *      500:
  *        description: Server Error
  */
-router.get("/car/:id", AuthMiddleware, CarController.show);
+router.get("/driver/:id", AuthMiddleware, DriverController.show);
 
 /**
  * @openapi
- * /car/{id}:
+ * /driver/{id}:
  *  put:
  *     tags:
- *     - Car
- *     summary: Update Car
+ *     - Driver
+ *     summary: Update Driver
  *     security:
  *	     - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the car
+ *       description: The unique id of the driver
  *       required: true
  *     requestBody:
  *      required: true
@@ -112,14 +108,10 @@ router.get("/car/:id", AuthMiddleware, CarController.show);
  *            type: object
  *            required:
  *              - name
- *              - license
  *            properties:
  *              name:
  *               type: string
- *               example: Volkswagen
- *              license:
- *               type: string
- *               example: AB12345
+ *               example: Asep
  *              picture:
  *               type: file
  *     responses:
@@ -132,21 +124,21 @@ router.get("/car/:id", AuthMiddleware, CarController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/car/:id", upload.carUpload.single('picture'), CarValidator.update, AuthMiddleware, CarController.update);
+router.put("/driver/:id", upload.driverUpload.single('picture'), DriverValidator.update, AuthMiddleware, DriverController.update);
 
 /**
  * @openapi
- * /car/{id}:
+ * /driver/{id}:
  *  delete:
  *     tags:
- *     - Car
- *     summary: Delete car
+ *     - Driver
+ *     summary: Delete driver
  *     security:
  *	     - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
- *       description: The unique id of the car
+ *       description: The unique id of the driver
  *       required: true
  *     responses:
  *      200:
@@ -156,7 +148,7 @@ router.put("/car/:id", upload.carUpload.single('picture'), CarValidator.update, 
  *      500:
  *        description: Server Error
  */
-router.delete("/car/:id", AuthMiddleware, CarController.destroy);
+router.delete("/driver/:id", AuthMiddleware, DriverController.destroy);
 
 
 module.exports = router;

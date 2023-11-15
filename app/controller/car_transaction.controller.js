@@ -1,4 +1,5 @@
 const CarTransaction = require("../model/car_transactions.model");
+const Driver = require("../model/drivers.model");
 
 const index = async (req, res) => {
   try {
@@ -77,6 +78,15 @@ const store = async (req, res) => {
       confirmation_note: req.body.confirmation_note,
     });
 
+    //Changing driver availability if the user use driver
+    if (req.body.driver_id){
+      const driver = await Driver.query()
+        .findById(req.body.driver_id)
+        .patch({
+          availability: "0",
+        });
+    }
+
     res.status(200).json({
       status: 200,
       message: "Pengajuan peminjaman mobil berhasil!",
@@ -127,6 +137,23 @@ const update = async (req, res) => {
         status: req.body.status,
         confirmation_note: req.body.confirmation_note,
       });
+
+    //Changing driver availability based on status
+    if (req.body.driver_id){
+      if (req.body.status == "Selesai" || req.body.status == "Ditolak"){
+        const driver = await Driver.query()
+          .findById(req.body.driver_id)
+          .patch({
+            availability: "1",
+          });
+      }else{
+        const driver = await Driver.query()
+          .findById(req.body.driver_id)
+          .patch({
+            availability: "0",
+          });
+      }
+    }
 
     //Declaring current datetime and convert it to string with timezone GMT+7
     const current_datetime = new Date();

@@ -95,11 +95,15 @@ const show = async (req, res) => {
 const update = async (req, res) => {
   try {
     if(req.body.newpassword){
-      await User.query()
-        .findById(req.params.id)
-        .patch({
-          password: await bcrypt.hash(req.body.newpassword, 10),
-        });
+      const user = await User.query().findById(req.params.id);
+      
+      if (await bcrypt.compare(req.body.oldpassword, user.password)) {
+        await User.query()
+          .findById(req.params.id)
+          .patch({
+            password: await bcrypt.hash(req.body.newpassword, 10),
+          });
+        }
     }else{
       if (!/gmedia\.id$/.test(req.body.email)){
         return res.status(400).json({
