@@ -1,13 +1,13 @@
-const Driver = require("../model/drivers.model");
+const Division = require("../model/divisions.model");
 
 const index = async (req, res) => {
   try {
-    const drivers = await Driver.query();
+    const divisions = await Division.query();
 
     res.status(200).json({
       status: 200,
       message: "OK!",
-      data: drivers,
+      data: divisions,
     });
   } catch (error) {
     console.error(error);
@@ -19,16 +19,15 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-    //Storing data to Driver
-    const driver = await Driver.query().insert({
+    //Storing data to Division
+    const division = await Division.query().insert({
       name: req.body.name,
-      picture: req.file.filename,
     });
 
     res.status(200).json({
       status: 200,
-      message: "Supir telah berhasil ditambah!",
-      data: driver,
+      message: "Divisi telah berhasil ditambah!",
+      data: division,
     });
   } catch (error) {
     console.error(error);
@@ -40,12 +39,12 @@ const store = async (req, res) => {
 
 const show = async (req, res) => {
   try {
-    const driver = await Driver.query().findById(req.params.id);
+    const division = await Division.query().findById(req.params.id);
 
     res.status(200).json({
       status: 200,
       message: "OK!",
-      data: driver,
+      data: division,
     });
   } catch (error) {
     console.error(error);
@@ -57,24 +56,16 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const driver = await Driver.query()
+    const division = await Division.query()
       .findById(req.params.id)
       .patch({
         name: req.body.name,
       });
 
-    if(req.file){
-      await Driver.query()
-        .findById(req.params.id)
-        .patch({
-          picture: req.file.filename,
-        });
-    }
-
     res.status(200).json({
       status: 200,
-      message: "Supir telah berhasil diedit!",
-      data: driver,
+      message: "Divisi telah berhasil diedit!",
+      data: division,
     });
   } catch (error) {
     console.error(error);
@@ -86,12 +77,12 @@ const update = async (req, res) => {
 
 const destroy = async (req, res) => {
   try {
-    const driver = await Driver.query().deleteById(req.params.id);
+    const division = await Division.query().deleteById(req.params.id);
 
     res.status(200).json({
       status: 200,
-      message: "Supir telah berhasil dihapus!",
-      data: driver,
+      message: "Divisi telah berhasil dihapus!",
+      data: division,
     });
   } catch (error) {
     console.error(error);

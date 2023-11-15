@@ -1,7 +1,7 @@
 const { check, validationResult } = require("express-validator");
 
 const store = [
-  check("name").not().isEmpty().withMessage("Nama supir tidak boleh kosong!"),
+  check("name").not().isEmpty().withMessage("Nama divisi tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -23,7 +23,7 @@ const store = [
 ];
 
 const update = [
-  check("name").not().isEmpty().withMessage("Nama supir tidak boleh kosong!"),
+  check("name").not().isEmpty().withMessage("Nama divisi tidak boleh kosong!"),
 
   (req, res, next) => {
     const errors = validationResult(req);
