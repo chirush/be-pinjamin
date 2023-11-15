@@ -126,13 +126,13 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
 
 /**
  * @openapi
- * /user/{id}:
+ * /user/profile/{id}:
  *  put:
  *     tags:
  *     - User
- *     summary: Update User
+ *     summary: Update Profile
  *     security:
- *	     - bearerAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *     - name: id
  *       in: path
@@ -147,7 +147,6 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *            required:
  *              - name
  *              - email
- *              - password
  *              - phone
  *              - role
  *              - division
@@ -158,9 +157,6 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *              email:
  *               type: string
  *               example: fitrahf87@gmedia.id
- *              password:
- *               type: string
- *               example: password
  *              phone:
  *               type: string
  *               example: 0895411423735
@@ -182,7 +178,49 @@ router.get("/user/:id", AuthMiddleware, UserController.show);
  *      500:
  *        description: Server Error
  */
-router.put("/user/:id", upload.userUpload.single('picture'), AuthMiddleware, UserValidator.update, UserController.update);
+router.put("/user/profile/:id", upload.userUpload.single('picture'), AuthMiddleware, UserValidator.updateProfile, UserController.update);
+
+/**
+ * @openapi
+ * /user/password/{id}:
+ *  put:
+ *     tags:
+ *     - User
+ *     summary: Update Password
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       description: The unique id of the user
+ *       required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - oldpassword
+ *              - newpassword
+ *            properties:
+ *              oldpassword:
+ *               type: string
+ *               example: password
+ *              newpassword:
+ *               type: string
+ *               example: password
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad Request
+ *      422:
+ *        description: Unprocessable Entity
+ *      500:
+ *        description: Server Error
+ */
+router.put("/user/password/:id", UserValidator.updatePassword, UserController.update);
 
 /**
  * @openapi

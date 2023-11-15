@@ -94,38 +94,37 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    if (!/gmedia\.id$/.test(req.body.email)){
-      return res.status(400).json({
-        status: 400,
-        message: "Email harus memiliki domain @gmedia.id!",
-      });
-    }
-    
-    const user = await User.query()
-      .findById(req.params.id)
-      .patch({
-        name: req.body.name,
-        email: req.body.email,
-        phone: (req.body.phone).toString(),
-        role: req.body.role,
-        division: req.body.division,
-        picture: req.file.filename,
-      });
-
-    if(req.body.password){
+    if(req.body.newpassword){
       await User.query()
         .findById(req.params.id)
         .patch({
-          password: await bcrypt.hash(req.body.password, 10),
+          password: await bcrypt.hash(req.body.newpassword, 10),
         });
-    }
+    }else{
+      if (!/gmedia\.id$/.test(req.body.email)){
+        return res.status(400).json({
+          status: 400,
+          message: "Email harus memiliki domain @gmedia.id!",
+        });
+      }
 
-    if(req.file.filename){
-      await User.query()
+      const user = await User.query()
         .findById(req.params.id)
         .patch({
-          picture: req.file.filename,
+          name: req.body.name,
+          email: req.body.email,
+          phone: (req.body.phone).toString(),
+          role: req.body.role,
+          division: req.body.division,
         });
+
+      if(req.file){
+        await User.query()
+          .findById(req.params.id)
+          .patch({
+            picture: req.file.filename,
+          });
+      }
     }
 
     const user_data = await User.query().findById(req.params.id);
