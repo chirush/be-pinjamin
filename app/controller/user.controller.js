@@ -94,16 +94,27 @@ const show = async (req, res) => {
 
 const update = async (req, res) => {
   try {
+    const user_data = await User.query().findById(req.params.id);
+
     if(req.body.newpassword){
-      const user = await User.query().findById(req.params.id);
-      
-      if (await bcrypt.compare(req.body.oldpassword, user.password)) {
+      if (await bcrypt.compare(req.body.oldpassword, user_data.password)) {
         await User.query()
           .findById(req.params.id)
           .patch({
             password: await bcrypt.hash(req.body.newpassword, 10),
           });
-        }
+
+        res.status(200).json({
+          status: 200,
+          message: "Password telah di ganti!",
+          data: user_data,
+        });
+      }else{
+        res.status(400).json({
+          status: 400,
+          message: "Password lama salah!",
+        });
+      }
     }else{
       if (!/gmedia\.id$/.test(req.body.email)){
         return res.status(400).json({
@@ -129,15 +140,14 @@ const update = async (req, res) => {
             picture: req.file.filename,
           });
       }
+
+      res.status(200).json({
+        status: 200,
+        message: "Profil telah di update!",
+        data: user_data,
+      });
     }
 
-    const user_data = await User.query().findById(req.params.id);
-
-    res.status(200).json({
-      status: 200,
-      message: "Success update!",
-      data: user_data,
-    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
