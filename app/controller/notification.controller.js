@@ -2,7 +2,7 @@ const Notification = require("../model/notifications.model");
 
 const index = async (req, res) => {
   try {
-    const notifications = await Notification.query().where('user_id', req.user.id);
+    const notifications = await Notification.query().where('user_id', req.user.id).orderBy('id', 'desc');
 
     for (const item of notifications){
     	if (item.status == "Unread"){
