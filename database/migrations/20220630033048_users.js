@@ -8,6 +8,8 @@ exports.up = function (knex) {
     table.string("phone");
     table.string("division").nullable();
     table.string("picture").nullable();
+    table.string("verification_token").nullable();
+    table.enu("status", ["unverified", "verified"]).defaultTo("unverified");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
     table.timestamp("deleted_at").nullable();

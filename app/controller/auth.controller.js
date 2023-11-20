@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs/dist/bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
 const User = require("../model/user.model");
+const transporter = require("../../config/mailer.js");
+const crypto = require('crypto');
 
 const login = async (req, res) => {
   try {
@@ -14,6 +16,7 @@ const login = async (req, res) => {
         "users.phone",
         "users.division",
         "users.role",
+        "users.status",
         "users.created_at",
         "users.updated_at",
       ])
@@ -30,22 +33,29 @@ const login = async (req, res) => {
           "users.phone",
           "users.division",
           "users.role",
+          "users.status",
           "users.created_at",
           "users.updated_at",
         ])
         .where("id", user.id)
         .first();
 
-      const token = jsonwebtoken.sign(user_data.toJSON(), process.env.APP_KEY, {
-        expiresIn: "2h",
-      });
+      if (user.status == "unverified"){
+        res.status(400).json({
+          message: "Email belum diverifikasi!",
+        });
+      }else{
+        const token = jsonwebtoken.sign(user_data.toJSON(), process.env.APP_KEY, {
+          expiresIn: "2h",
+        });
 
-      user_data.token = token;
+        user_data.token = token;
 
-      res.status(200).json({
-        message: "Login berhasil!",
-        data: user_data
-      });
+        res.status(200).json({
+          message: "Login berhasil!",
+          data: user_data
+        });
+      }
 
     } else {
       res.status(400).json({
@@ -78,12 +88,16 @@ const register = async (req, res) => {
       });
     }
 
+    /*
     if (!/gmedia\.id$/.test(req.body.email)){
       return res.status(400).json({
         status: 400,
         message: "Email harus memiliki domain @gmedia.id!",
       });
     }
+    */
+
+    const verification_token = crypto.randomBytes(20).toString('hex');
 
     const user = await User.query().insert({
       name: req.body.name,
@@ -92,11 +106,22 @@ const register = async (req, res) => {
       phone: (req.body.phone).toString(),
       division: req.body.division,
       role: "user",
+      verification_token: verification_token,
     });
+
+    const verification_link = `http://localhost:8080/verify-email?token=${verification_token}`;
+    const mail_options = {
+      from: 'GMedia',
+      to: req.body.email,
+      subject: 'Verify Your Email Address',
+      html: `Click <a href="${verification_link}">here</a> to verify your email address.`,
+    };
+
+    await transporter.sendMail(mail_options);
 
     res.status(200).json({
       status: 200,
-      message: "OK",
+      message: "Pendaftaran berhasil, silahkan cek email untuk verifikasi!",
       data: user,
     });
   } catch (error) {
@@ -107,7 +132,42 @@ const register = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  const { token } = req.query;
+  console.log(token);
+
+  try {
+    const user = await User.query().where('verification_token', token).first();
+
+    if (!user) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Token verifikasi salah!',
+      });
+    }
+
+    await User.query()
+      .findById(user.id)
+      .patch({
+        status: "verified",
+        verification_token: "",
+      });
+
+    res.status(200).json({
+      status: 200,
+      message: 'Email telah berhasil diverifikasi!',
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: 'Internal Server Error!',
+    });
+  }
+};
+
 module.exports = {
   login,
   register,
+  verifyEmail,
 };

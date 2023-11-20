@@ -91,4 +91,21 @@ router.post("/login", AuthValidator.login, AuthController.login);
  */
 router.post("/register", AuthValidator.register, AuthController.register);
 
+/**
+ * @openapi
+ * /verify-email:
+ *  get:
+ *     tags:
+ *     - Authentication
+ *     summary: Verify email user (You cant try this route)
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/verify-email", AuthController.verifyEmail);
+
 module.exports = router;

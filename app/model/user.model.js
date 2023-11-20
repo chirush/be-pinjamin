@@ -37,6 +37,12 @@ class User extends Model {
         picture: {
           type: "string",
         },
+        verification_token: {
+          type: "string",
+        },
+        status: {
+          type: "string",
+        },
       },
     };
   }

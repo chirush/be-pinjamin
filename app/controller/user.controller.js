@@ -1,6 +1,8 @@
 const User = require("../model/user.model");
 
 const bcrypt = require("bcryptjs/dist/bcrypt");
+const transporter = require("../../config/mailer.js");
+const crypto = require('crypto');
 
 const index = async (req, res) => {
   try {
@@ -43,6 +45,8 @@ const store = async (req, res) => {
         message: "Email harus memiliki domain @gmedia.id!",
       });
     }
+    
+    const verification_token = crypto.randomBytes(20).toString('hex');
 
     const user = await User.query().insert({
       name: req.body.name,
@@ -52,6 +56,7 @@ const store = async (req, res) => {
       phone: (req.body.phone).toString(),
       role: req.body.role,
       division: req.body.division,
+      verification_token: verification_token,
     });
 
     if(req.file){
@@ -62,9 +67,19 @@ const store = async (req, res) => {
         });
     }
 
+    const verification_link = `http://localhost:8080/verify-email?token=${verification_token}`;
+    const mail_options = {
+      from: 'GMedia',
+      to: req.body.email,
+      subject: 'Verify Your Email Address',
+      html: `Click <a href="${verification_link}">here</a> to verify your email address.`,
+    };
+
+    await transporter.sendMail(mail_options);
+
     res.status(200).json({
       status: 200,
-      message: "Success create!",
+      message: "Pendaftaran berhasil, silahkan cek email untuk verifikasi!",
       data: user,
     });
   } catch (error) {
