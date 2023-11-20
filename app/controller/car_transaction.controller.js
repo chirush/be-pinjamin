@@ -96,15 +96,15 @@ const store = async (req, res) => {
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
-        user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima",
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima!",
         type: "car",
         status: "unread",
       });
     }else{
       const notification = await Notification.query().insert({
-        user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat",
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat!",
         type: "car",
         status: "unread",
       });
@@ -239,8 +239,8 @@ const update = async (req, res) => {
 
       //Create new notification
       const notification = await Notification.query().insert({
-        user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah ditolak",
+        user_id: data_user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah ditolak!",
         type: "car",
         status: "unread",
       });
@@ -263,8 +263,8 @@ const update = async (req, res) => {
 
       //Create new notification
       const notification = await Notification.query().insert({
-        user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima",
+        user_id: data_user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima!",
         type: "car",
         status: "unread",
       });
@@ -275,12 +275,28 @@ const update = async (req, res) => {
         data: car_transaction_data,
       });
     }else if(req.body.status == "Digunakan"){
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: data_user.id,
+        notification: "Peminjaman Mobil ke "+req.body.destination+" telah berhasil diambil!",
+        type: "car",
+        status: "unread",
+      });
+
       res.status(200).json({
         status: 200,
         message: "Mobil telah diambil!",
         data: car_transaction_data,
       });
     }else if(req.body.status == "Selesai"){
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: data_user.id,
+        notification: "Peminjaman Mobil ke "+req.body.destination+" telah selesai!",
+        type: "car",
+        status: "unread",
+      });
+
       res.status(200).json({
         status: 200,
         message: "Peminjaman mobil telah selesai!",
