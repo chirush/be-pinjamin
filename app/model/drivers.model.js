@@ -23,7 +23,7 @@ class Drivers extends Model {
           type: "string",
         },
         availability: {
-          type: "integer",
+          type: "string",
         },
       },
     };

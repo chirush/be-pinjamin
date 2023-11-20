@@ -69,9 +69,9 @@ const store = async (req, res) => {
 
     const verification_link = `http://localhost:8080/verify-email?token=${verification_token}`;
     const mail_options = {
-      from: 'GMedia',
+      from: "GMedia",
       to: req.body.email,
-      subject: 'Verify Your Email Address',
+      subject: "Verify Your Email Address",
       html: `Click <a href="${verification_link}">here</a> to verify your email address.`,
     };
 

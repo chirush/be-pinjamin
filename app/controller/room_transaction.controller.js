@@ -165,16 +165,35 @@ const update = async (req, res) => {
         confirmation_note: req.body.confirmation_note,
       });
 
-    const room_confirmation_data = await RoomTransaction.query().findById(req.params.id);
+    const room_confirmation_data = await RoomTransaction.query().findById(req.params.id)
+    const data_user = await User.query().findById(room_confirmation_data.user_id);;
 
     //2 Different message will show based on the choosen status
     if(req.body.status == "Ditolak"){
+      const mail_options = {
+        from: 'GMedia',
+        to: data_user.email,
+        subject: 'Peminjaman ruangan telah ditolak',
+        html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah ditolak.`,
+      };
+
+      await transporter.sendMail(mail_options);
+
       res.status(200).json({
         status: 200,
         message: "Peminjaman ruangan telah ditolak!",
         data: room_confirmation_data,
       });
     }else{
+      const mail_options = {
+        from: 'GMedia',
+        to: data_user.email,
+        subject: 'Peminjaman ruangan telah diterima',
+        html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah diterima.`,
+      };
+
+      await transporter.sendMail(mail_options);
+
       res.status(200).json({
         status: 200,
         message: "Peminjaman ruangan telah diterima!",

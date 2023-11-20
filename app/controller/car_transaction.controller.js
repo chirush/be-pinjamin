@@ -1,6 +1,8 @@
 const CarTransaction = require("../model/car_transactions.model");
 const Driver = require("../model/drivers.model");
+const User = require("../model/user.model");
 const Notification = require("../model/notifications.model");
+const transporter = require("../../config/mailer.js");
 
 const index = async (req, res) => {
   try {
@@ -64,6 +66,9 @@ const store = async (req, res) => {
     //Merging value of date and time
   	const datetime = req.body.date+" "+req.body.time;
 
+    console.log(req.user.id);
+    console.log(req.body.status);
+
     //Storing data to Car Transaction
     const car_transaction = await CarTransaction.query().insert({
       user_id: req.user.id,
@@ -92,13 +97,17 @@ const store = async (req, res) => {
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima"
-      })
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima",
+        type: "car",
+        status: "unread",
+      });
     }else{
       const notification = await Notification.query().insert({
         user_id: req.user.id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat"
-      })
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat",
+        type: "car",
+        status: "unread",
+      });
     }
 
     res.status(200).json({
@@ -213,19 +222,56 @@ const update = async (req, res) => {
         });
     }
 
-    const car_transaction_data = await CarTransaction.query().findById(req.params.id)
+    const car_transaction_data = await CarTransaction.query().findById(req.params.id);
+    const data_user = await User.query().findById(car_transaction_data.user_id);
 
     //4 Different message will show based on the choosen status
     if(req.body.status == "Ditolak"){
+      //Sending notification to email
+      const mail_options = {
+        from: 'GMedia',
+        to: data_user.email,
+        subject: 'Permintaan peminjaman mobil telah ditolak',
+        html: `Permintaan peminjaman mobil dengan id "${car_transaction_data.id}" telah ditolak.`,
+      };
+
+      await transporter.sendMail(mail_options);
+
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: req.user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah ditolak",
+        type: "car",
+        status: "unread",
+      });
+
       res.status(200).json({
         status: 200,
-        message: "Peminjaman mobil telah ditolak!",
+        message: "Permintaan peminjaman mobil telah ditolak!",
         data: car_transaction_data,
       });
     }else if(req.body.status == "Diterima"){
+      //Sending notification to email
+      const mail_options = {
+        from: 'GMedia',
+        to: data_user.email,
+        subject: 'Permintaan peminjaman mobil telah diterima',
+        html: `Permintaan peminjaman mobil dengan id "${car_transaction_data.id}" telah diterima.`,
+      };
+
+      await transporter.sendMail(mail_options);
+
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: req.user.id,
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima",
+        type: "car",
+        status: "unread",
+      });
+
       res.status(200).json({
         status: 200,
-        message: "Peminjaman mobil telah diterima!",
+        message: "Permintaan peminjaman mobil telah diterima!",
         data: car_transaction_data,
       });
     }else if(req.body.status == "Digunakan"){

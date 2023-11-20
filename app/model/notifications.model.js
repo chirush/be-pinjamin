@@ -17,7 +17,7 @@ class Notifications extends Model {
 
       properties: {
         user_id: {
-          type: "string",
+          type: "integer",
         },
         notification: {
           type: "string",

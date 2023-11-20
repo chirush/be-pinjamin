@@ -217,7 +217,7 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *               example: 07:00:00
  *              status:
  *               type: string
- *               example: Diterima
+ *               enum: ["Dicek", "Ditolak", "Diterima", "Digunakan", "Selesai"]
  *              confirmation_note:
  *               type: string
  *               example: Lorem Ipsum

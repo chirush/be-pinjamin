@@ -26,7 +26,7 @@ class Cars extends Model {
           type: "string",
         },
         availability: {
-          type: "integer",
+          type: "string",
         },
       },
     };
