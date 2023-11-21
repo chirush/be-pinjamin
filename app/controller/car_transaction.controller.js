@@ -134,6 +134,7 @@ const show = async (req, res) => {
       const datetime_start = new Date(car_transaction.datetime_start.getTime() + (7*60) * 60000).toISOString()
       date_start = datetime_start.split('T')[0];
       time_start = datetime_start.split('T')[1];
+      time_start = time_start.split('.000Z')[0];
     }
 
     car_transaction.date_start = date_start;
