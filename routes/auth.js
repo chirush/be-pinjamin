@@ -108,4 +108,74 @@ router.post("/register", AuthValidator.register, AuthController.register);
  */
 router.get("/verify-email", AuthController.verifyEmail);
 
+/**
+ * @openapi
+ * /forgot-password:
+ *  put:
+ *     tags:
+ *     - Authentication
+ *     summary: Forgot password
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - email
+ *            properties:
+ *              email:
+ *               type: string
+ *               example: admin@gmedia.id
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ *      422:
+ *        description: Unprocessable Entity
+ *      500:
+ *        description: Server Error
+ */
+router.put("/forgot-password", AuthValidator.forgotPassword, AuthController.forgotPassword);
+
+/**
+ * @openapi
+ * /reset-password:
+ *  put:
+ *     tags:
+ *     - Authentication
+ *     summary: Reset password (You cant try this route)
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - password
+ *              - repeatpassword
+ *            properties:
+ *              password:
+ *               type: string
+ *               example: passwords
+ *              repeatpassword:
+ *               type: string
+ *               example: passwords
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ *      422:
+ *        description: Unprocessable Entity
+ *      500:
+ *        description: Server Error
+ */
+router.put("/reset-password", AuthValidator.resetPassword, AuthController.resetPassword);
+
 module.exports = router;

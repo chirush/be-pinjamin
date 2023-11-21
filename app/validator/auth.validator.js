@@ -49,7 +49,54 @@ const register = [
   },
 ];
 
+const forgotPassword = [
+  check("email").not().isEmpty().withMessage("Email tidak boleh kosong!"),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    let error_data = errors.array().map((error) => {
+      return {
+        item_name: error.param,
+        message: error.msg,
+      };
+    });
+
+    if (!errors.isEmpty())
+      return res.status(422).json({
+        errors: error_data,
+      });
+
+    next();
+  },
+];
+
+const resetPassword = [
+  check("password").not().isEmpty().withMessage("Password tidak boleh kosong!"),
+  check("repeatpassword").not().isEmpty().withMessage("Password tidak boleh kosong!"),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    let error_data = errors.array().map((error) => {
+      return {
+        item_name: error.param,
+        message: error.msg,
+      };
+    });
+
+    if (!errors.isEmpty())
+      return res.status(422).json({
+        errors: error_data,
+      });
+
+    next();
+  },
+];
+
 module.exports = {
   login,
   register,
+  forgotPassword,
+  resetPassword,
 };

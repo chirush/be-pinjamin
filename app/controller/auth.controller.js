@@ -134,12 +134,10 @@ const register = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { token } = req.query;
-  console.log(token);
-
   try {
     const user = await User.query().where('verification_token', token).first();
 
-    if (!user) {
+    if (!user){
       return res.status(400).json({
         status: 400,
         message: 'Token verifikasi salah!',
@@ -166,8 +164,92 @@ const verifyEmail = async (req, res) => {
   }
 };
 
+
+const forgotPassword = async (req, res) => {
+  try {
+    const user = await User.query().where('email', req.body.email).first();
+
+    if (!user){
+      return res.status(400).json({
+        status: 400,
+        message: 'User tidak ditemukan!',
+      })
+    }
+
+    const verification_token = crypto.randomBytes(20).toString('hex');
+
+    const user_patch = await User.query()
+      .where('email', req.body.email)
+      .patch({
+        verification_token: verification_token,
+      });
+
+    const verification_link = `http://localhost:8080/reset-password?token=${verification_token}`;
+    const mail_options = {
+      from: "GMedia",
+      to: req.body.email,
+      subject: "Reset Your Passsword",
+      html: `Click <a href="${verification_link}">here</a> to reset your password.`,
+    };
+
+    await transporter.sendMail(mail_options);
+
+    res.status(200).json({
+      status: 200,
+      message: "Silahkan cek email untuk melanjutkan tahap reset password!",
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.query;
+    const user = await User.query().where('verification_token', token).first();
+
+
+    if (!user){
+      return res.status(400).json({
+        status: 400,
+        message: 'Token reset password tidak berlaku!',
+      })
+    }
+
+    if (req.body.password != req.body.repeatpassword) {
+      return res.status(400).json({
+        status: 400,
+        message: "Password tidak sama!",
+      });
+    }else{
+      const user_patch = await User.query()
+        .findById(user.id)
+        .patch({
+          password: await bcrypt.hash(req.body.password, 10),
+        });
+
+      res.status(200).json({
+        status: 200,
+        message: "Reset password berhasil!",
+        data: user,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
 module.exports = {
   login,
   register,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
 };

@@ -97,6 +97,23 @@ const store = async (req, res) => {
       confirmation_note: req.body.confirmation_note,
     });
 
+    //Storing notification
+    if (req.body.status == "Diterima"){
+      const notification = await Notification.query().insert({
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
+        type: "room",
+        status: "unread",
+      });
+    }else{
+      const notification = await Notification.query().insert({
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah dibuat!",
+        type: "room",
+        status: "unread",
+      });
+    }
+
     res.status(200).json({
       status: 200,
       message: "Pengajuan peminjaman ruangan berhasil!",
@@ -169,7 +186,8 @@ const update = async (req, res) => {
     const data_user = await User.query().findById(room_confirmation_data.user_id);;
 
     //2 Different message will show based on the choosen status
-    if(req.body.status == "Ditolak"){
+    if (req.body.status == "Ditolak"){
+      //Sending notification to email
       const mail_options = {
         from: 'GMedia',
         to: data_user.email,
@@ -179,18 +197,35 @@ const update = async (req, res) => {
 
       await transporter.sendMail(mail_options);
 
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah ditolak!",
+        type: "room",
+        status: "unread",
+      });
+
       res.status(200).json({
         status: 200,
         message: "Peminjaman ruangan telah ditolak!",
         data: room_confirmation_data,
       });
-    }else{
+    }else if (req.body.status == "Diterima"){
+      //Sending notification to email
       const mail_options = {
         from: 'GMedia',
         to: data_user.email,
         subject: 'Peminjaman ruangan telah diterima',
         html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah diterima.`,
       };
+
+      //Create new notification
+      const notification = await Notification.query().insert({
+        user_id: car_transaction.user_id,
+        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
+        type: "room",
+        status: "unread",
+      });
 
       await transporter.sendMail(mail_options);
 

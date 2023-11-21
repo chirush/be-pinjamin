@@ -97,14 +97,14 @@ const store = async (req, res) => {
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah diterima!",
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima!",
         type: "car",
         status: "unread",
       });
     }else{
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
-        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" sudah dibuat!",
+        notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah dibuat!",
         type: "car",
         status: "unread",
       });
