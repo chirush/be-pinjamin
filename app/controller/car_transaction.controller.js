@@ -18,6 +18,16 @@ const index = async (req, res) => {
       car_transactions = await CarTransaction.query().orderBy('id', 'desc');
     }
 
+    for (const item of car_transactions){
+      const datetime_start = new Date(item.datetime_start.getTime() + (7*60) * 60000).toISOString()
+      let date_start = datetime_start.split('T')[0];
+      let time_start = datetime_start.split('T')[1];
+      time_start = time_start.split('.000Z')[0];
+
+      item.date_start = date_start;
+      item.time_start = time_start;
+    }
+
     res.status(200).json({
       status: 200,
       message: "OK!",
@@ -48,6 +58,16 @@ const showByStatus = async (req, res) => {
       car_transactions = await CarTransaction.query().where('status', status).orderBy('id', 'desc');
     }
 
+    for (const item of car_transactions){
+      const datetime_start = new Date(item.datetime_start.getTime() + (7*60) * 60000).toISOString()
+      let date_start = datetime_start.split('T')[0];
+      let time_start = datetime_start.split('T')[1];
+      time_start = time_start.split('.000Z')[0];
+
+      item.date_start = date_start;
+      item.time_start = time_start;
+    }
+    
     res.status(200).json({
       status: 200,
       message: "OK!",
@@ -65,9 +85,6 @@ const store = async (req, res) => {
   try {
     //Merging value of date and time
   	const datetime = req.body.date+" "+req.body.time;
-
-    console.log(req.user.id);
-    console.log(req.body.status);
 
     //Storing data to Car Transaction
     const car_transaction = await CarTransaction.query().insert({
