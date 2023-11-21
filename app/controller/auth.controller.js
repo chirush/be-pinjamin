@@ -109,7 +109,7 @@ const register = async (req, res) => {
       verification_token: verification_token,
     });
 
-    const verification_link = `http://localhost:8080/verify-email?token=${verification_token}`;
+    const verification_link = `http://localhost:5173/verify-email?token=${verification_token}`;
     const mail_options = {
       from: "GMedia",
       to: req.body.email,
@@ -184,7 +184,7 @@ const forgotPassword = async (req, res) => {
         verification_token: verification_token,
       });
 
-    const verification_link = `http://localhost:8080/reset-password?token=${verification_token}`;
+    const verification_link = `http://localhost:5173/reset-password?token=${verification_token}`;
     const mail_options = {
       from: "GMedia",
       to: req.body.email,
