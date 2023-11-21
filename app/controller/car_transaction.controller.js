@@ -18,6 +18,14 @@ const index = async (req, res) => {
       car_transactions = await CarTransaction.query().orderBy('id', 'desc');
     }
 
+    if(car_transactions.date_start){
+      const date_start = car_transactions.date_start.split('T')[0];
+      const time_start = car_transactions.date_start.split('T')[1];
+
+      car_transactions.date_start = date_start;
+      car_transactions.time_start = time_start;
+    }
+
     res.status(200).json({
       status: 200,
       message: "OK!",
