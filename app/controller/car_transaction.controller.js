@@ -18,14 +18,6 @@ const index = async (req, res) => {
       car_transactions = await CarTransaction.query().orderBy('id', 'desc');
     }
 
-    if(car_transactions.date_start){
-      const date_start = car_transactions.date_start.split('T')[0];
-      const time_start = car_transactions.date_start.split('T')[1];
-
-      car_transactions.date_start = date_start;
-      car_transactions.time_start = time_start;
-    }
-
     res.status(200).json({
       status: 200,
       message: "OK!",
@@ -134,6 +126,18 @@ const store = async (req, res) => {
 const show = async (req, res) => {
   try {
     const car_transaction = await CarTransaction.query().findById(req.params.id);
+    let date_start = "";
+    let time_start = "";
+
+
+    if(car_transaction.datetime_start){
+      const datetime_start = new Date(car_transaction.datetime_start.getTime() + (7*60) * 60000).toISOString()
+      date_start = datetime_start.split('T')[0];
+      time_start = datetime_start.split('T')[1];
+    }
+
+    car_transaction.date_start = date_start;
+    car_transaction.time_start = time_start;
 
     res.status(200).json({
       status: 200,
