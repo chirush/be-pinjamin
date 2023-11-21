@@ -109,7 +109,7 @@ const register = async (req, res) => {
       verification_token: verification_token,
     });
 
-    const verification_link = `http://localhost:5173/verify-email?token=${verification_token}`;
+    const verification_link = `http://localhost:8080/verify-email?token=${verification_token}`;
     const mail_options = {
       from: "GMedia",
       to: req.body.email,
@@ -151,6 +151,8 @@ const verifyEmail = async (req, res) => {
         verification_token: "",
       });
 
+    return res.redirect('http://localhost:5173/login')
+
     res.status(200).json({
       status: 200,
       message: 'Email telah berhasil diverifikasi!',
@@ -184,7 +186,7 @@ const forgotPassword = async (req, res) => {
         verification_token: verification_token,
       });
 
-    const verification_link = `http://localhost:5173/reset-password?token=${verification_token}`;
+    const verification_link = `http://localhost:8080/reset-password?token=${verification_token}`;
     const mail_options = {
       from: "GMedia",
       to: req.body.email,
