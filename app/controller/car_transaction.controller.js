@@ -53,9 +53,18 @@ const showByStatus = async (req, res) => {
     //The data will shown based on role
     if (user_role == "User"){
       const user_id = req.user.id;
-      car_transactions = await CarTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
+
+      if (status == "Semua"){
+        car_transactions = await CarTransaction.query().where('user_id', user_id).orderBy('id', 'desc');
+      }else{
+        car_transactions = await CarTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
+      }
     }else{
-      car_transactions = await CarTransaction.query().where('status', status).orderBy('id', 'desc');
+      if (status == "Semua"){
+        car_transactions = await CarTransaction.query().orderBy('id', 'desc');
+      }else{
+        car_transactions = await CarTransaction.query().where('status', status).orderBy('id', 'desc');
+      }
     }
 
     for (const item of car_transactions){
