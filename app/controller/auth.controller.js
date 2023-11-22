@@ -178,20 +178,20 @@ const forgotPassword = async (req, res) => {
       })
     }
 
-    const verification_token = crypto.randomBytes(20).toString('hex');
+    const reset_password_token = crypto.randomBytes(20).toString('hex');
 
     const user_patch = await User.query()
       .where('email', req.body.email)
       .patch({
-        verification_token: verification_token,
+        verification_token: reset_password_token,
       });
 
-    const verification_link = `http://localhost:8080/reset-password?token=${verification_token}`;
+    const reset_password_link = `http://localhost:8080/reset-password?token=${reset_password_token}`;
     const mail_options = {
       from: "GMedia",
       to: req.body.email,
       subject: "Reset Your Passsword",
-      html: `Click <a href="${verification_link}">here</a> to reset your password.`,
+      html: `Click <a href="${reset_password_link}">here</a> to reset your password.`,
     };
 
     await transporter.sendMail(mail_options);
