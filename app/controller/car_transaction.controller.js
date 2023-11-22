@@ -54,13 +54,13 @@ const showByStatus = async (req, res) => {
     if (user_role == "User"){
       const user_id = req.user.id;
 
-      if (status == ""){
+      if (status == "Semua"){
         car_transactions = await CarTransaction.query().where('user_id', user_id).orderBy('id', 'desc');
       }else{
         car_transactions = await CarTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
       }
     }else{
-      if (status == ""){
+      if (status == "Semua"){
         car_transactions = await CarTransaction.query().orderBy('id', 'desc');
       }else{
         car_transactions = await CarTransaction.query().where('status', status).orderBy('id', 'desc');
