@@ -123,6 +123,7 @@ const store = async (req, res) => {
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima!",
         type: "car",
         status: "unread",
@@ -130,6 +131,7 @@ const store = async (req, res) => {
     }else{
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah dibuat!",
         type: "car",
         status: "unread",
@@ -279,6 +281,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah ditolak!",
         type: "car",
         status: "unread",
@@ -303,6 +306,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima!",
         type: "car",
         status: "unread",
@@ -317,6 +321,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
+        transaction_id: car_transaction.id,
         notification: "Peminjaman Mobil ke "+req.body.destination+" telah berhasil diambil!",
         type: "car",
         status: "unread",
@@ -331,6 +336,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
+        transaction_id: car_transaction.id,
         notification: "Peminjaman Mobil ke "+req.body.destination+" telah selesai!",
         type: "car",
         status: "unread",

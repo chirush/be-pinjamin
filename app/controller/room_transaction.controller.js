@@ -101,6 +101,7 @@ const store = async (req, res) => {
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
         type: "room",
         status: "unread",
@@ -108,6 +109,7 @@ const store = async (req, res) => {
     }else{
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah dibuat!",
         type: "room",
         status: "unread",
@@ -200,6 +202,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah ditolak!",
         type: "room",
         status: "unread",
@@ -222,6 +225,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
+        transaction_id: car_transaction.id,
         notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
         type: "room",
         status: "unread",

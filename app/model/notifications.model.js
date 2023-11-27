@@ -13,10 +13,13 @@ class Notifications extends Model {
     return {
       type: "object",
 
-      required: ["user_id", "notification", "type", "status"],
+      required: ["user_id", "transaction_id", "notification", "type", "status"],
 
       properties: {
         user_id: {
+          type: "integer",
+        },
+        transaction_id: {
           type: "integer",
         },
         notification: {

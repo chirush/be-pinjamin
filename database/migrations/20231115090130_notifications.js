@@ -2,6 +2,7 @@ exports.up = function (knex) {
   return knex.schema.createTable("notifications", (table) => {
     table.increments("id").primary().unsigned();
     table.integer("user_id");
+    table.integer("transaction_id");
     table.text("notification");
     table.enu("type", ["Car", "Room"]);
     table.enu("status", ["Unread", "Read"]);
