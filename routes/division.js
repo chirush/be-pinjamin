@@ -56,7 +56,7 @@ router.get("/division", AuthMiddleware, DivisionController.index);
  *      500:
  *        description: Server Error
  */
-router.post("/division", upload.divisionUpload.single('picture'), DivisionValidator.store, AuthMiddleware, DivisionController.store);
+router.post("/division", DivisionValidator.store, AuthMiddleware, DivisionController.store);
 
 /**
  * @openapi
