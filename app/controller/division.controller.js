@@ -1,5 +1,22 @@
 const Division = require("../model/divisions.model");
 
+const nonSelected = async (req, res) => {
+  try {
+    const divisions = await Division.query().where('name', '!=', req.params.name);
+
+    res.status(200).json({
+      status: 200,
+      message: "OK!",
+      data: divisions,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
 const index = async (req, res) => {
   try {
     const divisions = await Division.query();
@@ -94,6 +111,7 @@ const destroy = async (req, res) => {
 
 
 module.exports = {
+  nonSelected,
   index,
   store,
   show,

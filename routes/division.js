@@ -8,6 +8,30 @@ const AuthMiddleware = require("../middleware/auth.middleware");
 
 /**
  * @openapi
+ * /division/non-selected/{name}:
+ *  get:
+ *     tags:
+ *     - Division
+ *     summary: Get division
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *     - name: name
+ *       in: path
+ *       description: The name of the division
+ *       required: true
+ *     responses:
+ *      200:
+ *        description: Success
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/division/non-selected/:name", AuthMiddleware, DivisionController.nonSelected);
+
+/**
+ * @openapi
  * /division:
  *  get:
  *     tags:
