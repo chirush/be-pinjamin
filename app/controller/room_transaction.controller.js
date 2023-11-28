@@ -102,7 +102,7 @@ const store = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
         transaction_id: car_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
         type: "room",
         status: "unread",
       });
@@ -110,7 +110,7 @@ const store = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
         transaction_id: car_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah dibuat!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah dibuat!",
         type: "room",
         status: "unread",
       });
@@ -184,8 +184,8 @@ const update = async (req, res) => {
         confirmation_note: req.body.confirmation_note,
       });
 
-    const room_confirmation_data = await RoomTransaction.query().findById(req.params.id)
-    const data_user = await User.query().findById(room_confirmation_data.user_id);;
+    const room_confirmation_data = await RoomTransaction.query().findById(req.params.id);
+    const data_user = await User.query().findById(room_confirmation_data.user_id);
 
     //2 Different message will show based on the choosen status
     if (req.body.status == "Ditolak"){
@@ -203,7 +203,7 @@ const update = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
         transaction_id: car_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah ditolak!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah ditolak!",
         type: "room",
         status: "unread",
       });
@@ -226,7 +226,7 @@ const update = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
         transaction_id: car_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan ke "+req.body.destination+" telah diterima!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
         type: "room",
         status: "unread",
       });
