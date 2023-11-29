@@ -1,3 +1,4 @@
+const Car = require("../model/cars.model");
 const CarTransaction = require("../model/car_transactions.model");
 const Driver = require("../model/drivers.model");
 const User = require("../model/user.model");
@@ -119,6 +120,15 @@ const store = async (req, res) => {
         });
     }
 
+    //Changing car availability if admin give the user car
+    if (req.body.car_id){
+      const car = await Car.query()
+        .findById(req.body.car_id)
+        .patch({
+          availability: "0",
+        });
+    }
+
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
@@ -213,6 +223,23 @@ const update = async (req, res) => {
       }else{
         const driver = await Driver.query()
           .findById(req.body.driver_id)
+          .patch({
+            availability: "0",
+          });
+      }
+    }
+
+    //Changing car availability if admin give the user car
+    if (req.body.car_id){
+      if (req.body.status == "Selesai" || req.body.status == "Ditolak"){
+        const car = await Car.query()
+          .findById(req.body.car_id)
+          .patch({
+            availability: "1",
+          });
+      }else{
+        const car = await Car.query()
+          .findById(req.body.car_id)
           .patch({
             availability: "0",
           });
