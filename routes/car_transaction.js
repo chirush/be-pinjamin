@@ -146,11 +146,11 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
 
 /**
  * @openapi
- * /car-transaction/{id}:
+ * /car-transaction/admin/{id}:
  *  put:
  *     tags:
  *     - Car Transaction
- *     summary: Update the booked car (include confirmation)
+ *     summary: Update the booked car, include the confirmation (Admin)
  *     security:
  *	     - bearerAuth: []
  *     parameters:
@@ -161,7 +161,7 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *     requestBody:
  *      required: true
  *      content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *            type: object
  *            required:
@@ -203,18 +203,6 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *              car_id:
  *               type: integer
  *               example: 1
- *              time_taken:
- *               type: string
- *               format: time
- *               example: 08:00:00
- *              picture:
- *               type: file
- *              driving_license:
- *               type: file
- *              time_return:
- *               type: string
- *               format: time
- *               example: 07:00:00
  *              status:
  *               type: string
  *               enum: ["Dicek", "Ditolak", "Diterima", "Digunakan", "Selesai"]
@@ -231,7 +219,105 @@ router.get("/car-transaction/:id", AuthMiddleware, CarTransactionController.show
  *      500:
  *        description: Server Error
  */
-router.put("/car-transaction/:id", upload.carTransactionUpload.fields([{ name: 'picture', maxCount: 1}, { name: 'driving_license', maxCount: 1}, ]), CarTransactionValidator.update, AuthMiddleware, CarTransactionController.update);
+router.put("/car-transaction/admin/:id", CarTransactionValidator.adminUpdate, AuthMiddleware, CarTransactionController.update);
+
+/**
+ * @openapi
+ * /car-transaction/take/{id}:
+ *  put:
+ *     tags:
+ *     - Car Transaction
+ *     summary: Taking the booked car (User)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       description: The unique id of the car transaction
+ *       required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         multipart/form-data:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - date
+ *              - time_taken
+ *              - picture
+ *              - driving_license
+ *            properties:
+ *              date:
+ *               type: string
+ *               format: date
+ *               example: 2023-11-13
+ *              time_taken:
+ *               type: string
+ *               format: time
+ *               example: 08:00:00
+ *              picture:
+ *               type: file
+ *              driving_license:
+ *               type: file
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad Request
+ *      422:
+ *        description: Unprocessable Entity
+ *      500:
+ *        description: Server Error
+ */
+router.put("/car-transaction/take/:id", upload.carTransactionUpload.fields([{ name: 'picture', maxCount: 1}, { name: 'driving_license', maxCount: 1}, ]), CarTransactionValidator.userTake, AuthMiddleware, CarTransactionController.userTake);
+
+/**
+ * @openapi
+ * /car-transaction/return/{id}:
+ *  put:
+ *     tags:
+ *     - Car Transaction
+ *     summary: Returning the booked car (Admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       description: The unique id of the car transaction
+ *       required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - date
+ *              - time_return
+ *              - return_note
+ *            properties:
+ *              date:
+ *               type: string
+ *               format: date
+ *               example: 2023-11-13
+ *              time_return:
+ *               type: string
+ *               format: time
+ *               example: 08:00:00
+ *              return_note:
+ *               type: string
+ *               example: Lorem Ipsum
+ *     responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Bad Request
+ *      422:
+ *        description: Unprocessable Entity
+ *      500:
+ *        description: Server Error
+ */
+router.put("/car-transaction/return/:id", CarTransactionValidator.adminReturn, AuthMiddleware, CarTransactionController.adminReturn);
 
 /**
  * @openapi

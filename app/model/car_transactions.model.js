@@ -37,14 +37,11 @@ class CarTransactions extends Model {
         datetime_start: {
           type: "string",
         },
-        datetime_taken: {
-          type: "string",
-        },
-        datetime_return: {
-          type: "string",
-        },
         car_id: {
           type: "integer",
+        },
+        confirmation_note: {
+          type: "string",
         },
         driving_license: {
           type: "string",
@@ -52,10 +49,16 @@ class CarTransactions extends Model {
         picture: {
           type: "string",
         },
-        status: {
+        datetime_taken: {
           type: "string",
         },
-        confirmation_note: {
+        datetime_return: {
+          type: "string",
+        },
+        return_note: {
+          type: "string",
+        },
+        status: {
           type: "string",
         },
       },

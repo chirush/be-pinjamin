@@ -191,6 +191,98 @@ const show = async (req, res) => {
   }
 };
 
+const userTake = async (req, res) => {
+  try {
+    //Merging value of date and time_taken
+    const datetime_taken = req.body.date+" "+req.body.time_taken;
+
+    //Updating the Status
+    const car_transaction = await CarTransaction.query()
+      .findById(req.params.id)
+      .patch({
+        status: "Digunakan",
+        datetime_taken: datetime_taken,
+        picture: req.files.picture[0].filename,
+        driving_license: req.files.driving_license[0].filename,
+      });
+
+    const car_transaction_data = await CarTransaction.query().findById(req.params.id);
+    const data_user = await User.query().findById(car_transaction_data.user_id);
+
+    //Create new notification
+    const notification = await Notification.query().insert({
+      user_id: data_user.id,
+      transaction_id: car_transaction_data.id,
+      notification: "Peminjaman Mobil ke "+req.body.destination+" telah berhasil diambil!",
+      type: "car",
+      status: "unread",
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: "Mobil telah diambil!",
+      data: car_transaction_data,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+}
+
+const adminReturn = async (req, res) => {
+  try {
+    //Merging value of date and time_taken
+    const datetime_return = req.body.date+" "+req.body.time_return;
+
+    //Updating the Status
+    const car_transaction = await CarTransaction.query()
+      .findById(req.params.id)
+      .patch({
+        datetime_return: datetime_return,
+        return_note: req.body.return_note,
+        status: "Selesai",
+      });
+
+    const car_transaction_data = await CarTransaction.query().findById(req.params.id);
+    const data_user = await User.query().findById(car_transaction_data.user_id);
+
+    //Updating the Driver and Car Availability
+    const driver = await Driver.query()
+      .findById(car_transaction_data.driver_id)
+      .patch({
+        availability: "1",
+      });
+
+    const car = await Car.query()
+      .findById(car_transaction_data.car_id)
+      .patch({
+        availability: "1",
+      });
+
+    //Create new notification
+    const notification = await Notification.query().insert({
+      user_id: data_user.id,
+      transaction_id: car_transaction_data.id,
+      notification: "Peminjaman Mobil ke "+req.body.destination+" telah selesai!",
+      type: "car",
+      status: "unread",
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: "Peminjaman mobil telah selesai!",
+      data: car_transaction_data,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+}
+
 const update = async (req, res) => {
   try {
     //Mergin value of date and time
@@ -203,11 +295,11 @@ const update = async (req, res) => {
         datetime_start: datetime_start,
         destination: req.body.destination,
         description: req.body.description,
-        passanger: parseInt(req.body.passanger),
+        passanger: req.body.passanger,
         passanger_description: req.body.passanger_description,
         driver: req.body.driver,
         driver_id: req.body.driver_id,
-        car_id: parseInt(req.body.car_id),
+        car_id: req.body.car_id,
         status: req.body.status,
         confirmation_note: req.body.confirmation_note,
       });
@@ -246,50 +338,6 @@ const update = async (req, res) => {
       }
     }
 
-    //Declaring current datetime and convert it to string with timezone GMT+7
-    const current_datetime = new Date();
-    const current_datetime_string = new Date(current_datetime.getTime() + (7*60) * 60000).toISOString()
-
-    //Removing the time from current_datetime
-    const current_date = current_datetime_string.split('T')[0];
-
-    //Checking if theres value on time_taken
-    if(req.body.time_taken){
-      //Merging value of date and time_taken
-      const datetime_taken = current_date+" "+req.body.time_taken;
-
-      //Updating the Car Transation
-      await CarTransaction.query()
-        .findById(req.params.id)
-        .patch({
-          datetime_taken: datetime_taken,
-        });
-    }
-
-    //Checking if theres value on time_return
-    if(req.body.time_return){
-      //Merging value of date and time_return
-      const datetime_return = current_date+" "+req.body.time_return;
-
-      //Updating the Car Transation
-      await CarTransaction.query()
-        .findById(req.params.id)
-        .patch({
-          datetime_return: datetime_return,
-        });
-    }
-
-    //Checking if theres picture
-    if(req.file){
-      //Updating the Car Transation
-      await CarTransaction.query()
-        .findById(req.params.id)
-        .patch({
-          picture: req.files.picture[0].filename,
-          driving_license: req.files.driving_license[0].filename,
-        });
-    }
-
     const car_transaction_data = await CarTransaction.query().findById(req.params.id);
     const data_user = await User.query().findById(car_transaction_data.user_id);
 
@@ -308,7 +356,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
-        transaction_id: car_transaction.id,
+        transaction_id: car_transaction_data.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah ditolak!",
         type: "car",
         status: "unread",
@@ -333,7 +381,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
-        transaction_id: car_transaction.id,
+        transaction_id: car_transaction_data.id,
         notification: "Permintaan Peminjaman Mobil ke "+req.body.destination+" telah diterima!",
         type: "car",
         status: "unread",
@@ -348,7 +396,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
-        transaction_id: car_transaction.id,
+        transaction_id: car_transaction_data.id,
         notification: "Peminjaman Mobil ke "+req.body.destination+" telah berhasil diambil!",
         type: "car",
         status: "unread",
@@ -363,7 +411,7 @@ const update = async (req, res) => {
       //Create new notification
       const notification = await Notification.query().insert({
         user_id: data_user.id,
-        transaction_id: car_transaction.id,
+        transaction_id: car_transaction_data.id,
         notification: "Peminjaman Mobil ke "+req.body.destination+" telah selesai!",
         type: "car",
         status: "unread",
@@ -372,6 +420,12 @@ const update = async (req, res) => {
       res.status(200).json({
         status: 200,
         message: "Peminjaman mobil telah selesai!",
+        data: car_transaction_data,
+      });
+    }else if(req.body.status == "Dicek"){
+      res.status(200).json({
+        status: 200,
+        message: "Peminjaman mobil telah di update!",
         data: car_transaction_data,
       });
     }
@@ -405,6 +459,8 @@ module.exports = {
   index,
   store,
   show,
+  userTake,
+  adminReturn,
   update,
   destroy,
 };
