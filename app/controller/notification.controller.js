@@ -1,4 +1,5 @@
 const Notification = require("../model/notifications.model");
+const moment = require('moment');
 
 const index = async (req, res) => {
   try {
@@ -12,7 +13,15 @@ const index = async (req, res) => {
 		        status: "Read",
 		      });
     	}
+
+      const created_at = new Date(item.created_at);
+
+      let timeago = moment(created_at).locale('id').fromNow();;
+
+      item.timeago = timeago;
     }
+
+
 
     res.status(200).json({
       status: 200,
