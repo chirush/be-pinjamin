@@ -26,7 +26,7 @@ This will allow us to use `knex` as a command line tool that helps you create an
 
 #### Multer for File Upload Handle
 
-Just dont forget to create folder named "uploads". Also inside the folder "uploads", create a folder named "rooms", "cars", "cars booking" & "users".
+Just dont forget to create folder named "uploads". Also inside the folder "uploads", create a folder named "rooms", "cars", "cars booking", "drivers" & "users".
 
 ## Installation
 
