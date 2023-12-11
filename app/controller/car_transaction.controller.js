@@ -19,6 +19,7 @@ const index = async (req, res) => {
       car_transactions = await CarTransaction.query().orderBy('id', 'desc');
     }
 
+    //Spliting datetime
     for (const item of car_transactions){
       const datetime_start = new Date(item.datetime_start.getTime() + (7*60) * 60000).toISOString()
       let date_start = datetime_start.split('T')[0];
@@ -68,6 +69,7 @@ const showByStatus = async (req, res) => {
       }
     }
 
+    //Spliting datetime
     for (const item of car_transactions){
       const datetime_start = new Date(item.datetime_start.getTime() + (7*60) * 60000).toISOString()
       let date_start = datetime_start.split('T')[0];
@@ -164,19 +166,37 @@ const store = async (req, res) => {
 const show = async (req, res) => {
   try {
     const car_transaction = await CarTransaction.query().findById(req.params.id);
-    let date_start = "";
-    let time_start = "";
 
-
+    //Spliting datetime
     if(car_transaction.datetime_start){
-      const datetime_start = new Date(car_transaction.datetime_start.getTime() + (7*60) * 60000).toISOString()
+      const datetime_start = new Date(car_transaction.datetime_start.getTime() + (7*60) * 60000).toISOString();
       date_start = datetime_start.split('T')[0];
       time_start = datetime_start.split('T')[1];
       time_start = time_start.split('.000Z')[0];
+
+      car_transaction.date_start = date_start;
+      car_transaction.time_start = time_start;
     }
 
-    car_transaction.date_start = date_start;
-    car_transaction.time_start = time_start;
+    if(car_transaction.datetime_taken){
+      const datetime_taken = new Date(car_transaction.datetime_taken.getTime() + (7*60) * 60000).toISOString();
+      date_taken = datetime_taken.split('T')[0];
+      time_taken = datetime_taken.split('T')[1];
+      time_taken = time_taken.split('.000Z')[0];
+
+      car_transaction.date_taken = date_taken;
+      car_transaction.time_taken = time_taken;
+    }
+
+    if(car_transaction.datetime_return){
+      const datetime_return = new Date(car_transaction.datetime_return.getTime() + (7*60) * 60000).toISOString();
+      date_return = datetime_return.split('T')[0];
+      time_return = datetime_return.split('T')[1];
+      time_return = time_return.split('.000Z')[0];
+
+      car_transaction.date_return = date_return;
+      car_transaction.time_return = time_return;
+    }
 
     res.status(200).json({
       status: 200,
@@ -196,7 +216,6 @@ const userTake = async (req, res) => {
     //Merging value of date and time_taken
     const datetime_taken = req.body.date+" "+req.body.time_taken;
 
-    //Updating the Status
     const car_transaction = await CarTransaction.query()
       .findById(req.params.id)
       .patch({
@@ -236,7 +255,6 @@ const adminReturn = async (req, res) => {
     //Merging value of date and time_taken
     const datetime_return = req.body.date+" "+req.body.time_return;
 
-    //Updating the Status
     const car_transaction = await CarTransaction.query()
       .findById(req.params.id)
       .patch({
@@ -248,12 +266,14 @@ const adminReturn = async (req, res) => {
     const car_transaction_data = await CarTransaction.query().findById(req.params.id);
     const data_user = await User.query().findById(car_transaction_data.user_id);
 
-    //Updating the Driver and Car Availability
-    const driver = await Driver.query()
-      .findById(car_transaction_data.driver_id)
-      .patch({
-        availability: "1",
-      });
+    //Updating the Driver and Car availability
+    if (car_transaction_data.driver_id){
+      const driver = await Driver.query()
+        .findById(car_transaction_data.driver_id)
+        .patch({
+          availability: "1",
+        });
+    }
 
     const car = await Car.query()
       .findById(car_transaction_data.car_id)
@@ -285,10 +305,9 @@ const adminReturn = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    //Mergin value of date and time
+    //Merging value of date and time
     const datetime_start = req.body.date+" "+req.body.time;
 
-    //Updating the Car Transaction
     const car_transaction = await CarTransaction.query()
       .findById(req.params.id)
       .patch({
@@ -321,7 +340,7 @@ const update = async (req, res) => {
       }
     }
 
-    //Changing car availability if admin give the user car
+    //Changing car availability based on status
     if (req.body.car_id){
       if (req.body.status == "Selesai" || req.body.status == "Ditolak"){
         const car = await Car.query()

@@ -12,7 +12,7 @@ const AuthMiddleware = require("../middleware/auth.middleware");
  *  get:
  *     tags:
  *     - Division
- *     summary: Get division
+ *     summary: Get non selected division
  *     security:
  *       - bearerAuth: []
  *     parameters:

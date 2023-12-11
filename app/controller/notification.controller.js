@@ -21,8 +21,6 @@ const index = async (req, res) => {
       item.timeago = timeago;
     }
 
-
-
     res.status(200).json({
       status: 200,
       message: "OK!",

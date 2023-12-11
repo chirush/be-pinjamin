@@ -36,7 +36,6 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-    //Storing data to Division
     const division = await Division.query().insert({
       name: req.body.name,
     });
