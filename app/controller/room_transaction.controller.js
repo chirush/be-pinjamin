@@ -1,4 +1,5 @@
 const RoomTransaction = require("../model/room_transactions.model");
+const Room = require("../model/rooms.model");
 const Notification = require("../model/notifications.model");
 const transporter = require("../../config/mailer.js");
 const User = require("../model/user.model");
@@ -17,6 +18,12 @@ const index = async (req, res) => {
       room_transactions = await RoomTransaction.query().orderBy('id', 'desc');
     }
 
+    for (const item of room_transactions){
+      const room = await Room.query().findById(item.room_id)
+
+      item.room_name = room.name;
+    }
+    
     res.status(200).json({
       status: 200,
       message: "OK!",
@@ -55,6 +62,13 @@ const showByStatus = async (req, res) => {
         room_transactions = await RoomTransaction.query().where('status', status).orderBy('id', 'desc');
       }
     }
+
+    for (const item of room_transactions){
+      const room = await Room.query().findById(item.room_id)
+
+      item.room_name = room.name;
+    }
+    
 
     res.status(200).json({
       status: 200,
@@ -108,12 +122,14 @@ const store = async (req, res) => {
       confirmation_note: req.body.confirmation_note,
     });
 
+    const room = await Room.query().findById(req.body.room_id);
+
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_transaction.id+" telah diterima!",
+        notification: "Permintaan Peminjaman Ruangan "+room.name+" telah diterima!",
         type: "room",
         status: "unread",
       });
@@ -121,7 +137,7 @@ const store = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_transaction.id+" telah dibuat!",
+        notification: "Permintaan Peminjaman Ruangan "+room.name+" telah dibuat!",
         type: "room",
         status: "unread",
       });
@@ -196,6 +212,7 @@ const update = async (req, res) => {
 
     const room_confirmation_data = await RoomTransaction.query().findById(req.params.id);
     const data_user = await User.query().findById(room_confirmation_data.user_id);
+    const room = await Room.query().findById(req.body.room_id);
 
     //2 Different message will show based on the choosen status
     if (req.body.status == "Ditolak"){
@@ -204,7 +221,7 @@ const update = async (req, res) => {
         from: 'GMedia',
         to: data_user.email,
         subject: 'Peminjaman ruangan telah ditolak',
-        html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah ditolak.`,
+        html: `Peminjaman ruangan "${room.name}" telah ditolak.`,
       };
 
       await transporter.sendMail(mail_options);
@@ -213,7 +230,7 @@ const update = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah ditolak!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room.name+" telah ditolak!",
         type: "room",
         status: "unread",
       });
@@ -228,13 +245,13 @@ const update = async (req, res) => {
         from: 'GMedia',
         to: data_user.email,
         subject: 'Peminjaman ruangan telah diterima',
-        html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah diterima.`,
+        html: `Peminjaman ruangan dengan id "${room.name}" telah diterima.`,
       };
 
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room.name+" telah diterima!",
         type: "room",
         status: "unread",
       });
