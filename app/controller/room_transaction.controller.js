@@ -1,6 +1,7 @@
 const RoomTransaction = require("../model/room_transactions.model");
 const Notification = require("../model/notifications.model");
 const transporter = require("../../config/mailer.js");
+const User = require("../model/user.model");
 
 const index = async (req, res) => {
   try {
