@@ -99,6 +99,8 @@ const store = async (req, res) => {
       confirmation_note: req.body.confirmation_note,
     });
 
+    const room_transaction_data = await RoomTransaction.query().findById(req.params.id);
+
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
