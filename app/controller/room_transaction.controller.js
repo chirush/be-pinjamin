@@ -20,10 +20,13 @@ const index = async (req, res) => {
 
     for (const item of room_transactions){
       const room = await Room.query().findById(item.room_id)
+      const date = new Date(item.date).toISOString();
+      const formatted_date = date.split('T')[0];
 
       item.room_name = room.name;
+      item.date = formatted_date;
     }
-    
+
     res.status(200).json({
       status: 200,
       message: "OK!",
@@ -65,10 +68,12 @@ const showByStatus = async (req, res) => {
 
     for (const item of room_transactions){
       const room = await Room.query().findById(item.room_id)
+      const date = new Date(item.date).toISOString();
+      const formatted_date = date.split('T')[0];
 
       item.room_name = room.name;
+      item.date = formatted_date;
     }
-    
 
     res.status(200).json({
       status: 200,
@@ -159,6 +164,15 @@ const store = async (req, res) => {
 const show = async (req, res) => {
   try {
     const room_transaction = await RoomTransaction.query().findById(req.params.id);
+
+    for (const item of room_transactions){
+      const room = await Room.query().findById(item.room_id)
+      const date = new Date(item.date).toISOString();
+      const formatted_date = date.split('T')[0];
+
+      item.room_name = room.name;
+      item.date = formatted_date;
+    }
 
     res.status(200).json({
       status: 200,
