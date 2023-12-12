@@ -1,4 +1,5 @@
 const RoomTransaction = require("../model/room_transactions.model");
+const Notification = require("../model/notifications.model");
 
 const index = async (req, res) => {
   try {
@@ -212,7 +213,6 @@ const update = async (req, res) => {
         data: room_confirmation_data,
       });
     }else if (req.body.status == "Diterima"){
-      //Sending notification to email
       const mail_options = {
         from: 'GMedia',
         to: data_user.email,
@@ -220,7 +220,6 @@ const update = async (req, res) => {
         html: `Peminjaman ruangan dengan id "${room_confirmation_data.id}" telah diterima.`,
       };
 
-      //Create new notification
       const notification = await Notification.query().insert({
         user_id: car_transaction.user_id,
         transaction_id: car_transaction.id,

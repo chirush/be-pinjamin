@@ -53,7 +53,6 @@ const index = async (req, res) => {
 
 const store = async (req, res) => {
   try {
-    //Storing data to model Room
     const room = await Room.query().insert({
       name: req.body.name,
       description: req.body.description,
