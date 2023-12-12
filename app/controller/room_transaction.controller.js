@@ -99,14 +99,12 @@ const store = async (req, res) => {
       confirmation_note: req.body.confirmation_note,
     });
 
-    const room_transaction_data = await RoomTransaction.query().findById(req.params.id);
-
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_transaction.id+" telah diterima!",
         type: "room",
         status: "unread",
       });
@@ -114,7 +112,7 @@ const store = async (req, res) => {
       const notification = await Notification.query().insert({
         user_id: room_transaction.user_id,
         transaction_id: room_transaction.id,
-        notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah dibuat!",
+        notification: "Permintaan Peminjaman Ruangan dengan id "+room_transaction.id+" telah dibuat!",
         type: "room",
         status: "unread",
       });
