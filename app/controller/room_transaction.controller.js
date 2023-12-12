@@ -42,9 +42,18 @@ const showByStatus = async (req, res) => {
     //The data will shown based on role
     if (user_role == "User"){
       const user_id = req.user.id;
-      room_transactions = await RoomTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
+
+      if (status == "Semua"){
+        room_transactions = await RoomTransaction.query().where('user_id', user_id).orderBy('id', 'desc');
+      }else{
+        room_transactions = await RoomTransaction.query().where('user_id', user_id).where('status', status).orderBy('id', 'desc');
+      }
     }else{
-      room_transactions = await RoomTransaction.query().where('status', status).orderBy('id', 'desc');
+      if (status == "Semua"){
+        room_transactions = await RoomTransaction.query().orderBy('id', 'desc');
+      }else{
+        room_transactions = await RoomTransaction.query().where('status', status).orderBy('id', 'desc');
+      }
     }
 
     res.status(200).json({
