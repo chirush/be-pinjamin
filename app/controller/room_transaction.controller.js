@@ -102,16 +102,16 @@ const store = async (req, res) => {
     //Storing notification
     if (req.body.status == "Diterima"){
       const notification = await Notification.query().insert({
-        user_id: car_transaction.user_id,
-        transaction_id: car_transaction.id,
+        user_id: room_transaction.user_id,
+        transaction_id: room_transaction.id,
         notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
         type: "room",
         status: "unread",
       });
     }else{
       const notification = await Notification.query().insert({
-        user_id: car_transaction.user_id,
-        transaction_id: car_transaction.id,
+        user_id: room_transaction.user_id,
+        transaction_id: room_transaction.id,
         notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah dibuat!",
         type: "room",
         status: "unread",
@@ -202,8 +202,8 @@ const update = async (req, res) => {
 
       //Create new notification
       const notification = await Notification.query().insert({
-        user_id: car_transaction.user_id,
-        transaction_id: car_transaction.id,
+        user_id: room_transaction.user_id,
+        transaction_id: room_transaction.id,
         notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah ditolak!",
         type: "room",
         status: "unread",
@@ -223,8 +223,8 @@ const update = async (req, res) => {
       };
 
       const notification = await Notification.query().insert({
-        user_id: car_transaction.user_id,
-        transaction_id: car_transaction.id,
+        user_id: room_transaction.user_id,
+        transaction_id: room_transaction.id,
         notification: "Permintaan Peminjaman Ruangan dengan id "+room_confirmation_data.id+" telah diterima!",
         type: "room",
         status: "unread",
